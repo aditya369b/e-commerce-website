@@ -23,26 +23,36 @@ MongoClient.connect(url, (err, client)=>{
     //create item in inventory
     app.post("/api/inventory/create", (req, res)=>{ 
         db.collection('inventory')
-        .insertOne({name:req.body.name, price:req.body.price, quantity:req.body.quantity, description:req.body.description}, (err, item) => {
+        .insertOne({
+            ProductDetail: {
+                ProductName: req.body.ProductName,
+                ProductPrice: req.body.ProductPrice,
+                ProductDescription:req.body.ProductDescription,
+            }, 
+            ProductSoldCount: "0"
+        }, (err, item) => {
             if(err) res.status(404).send('Error: Item already exist');
             if(item) res.status(201).send('Item was successfully added to inventory');
         });
     });
-    //get item info from inventory
+    
+    //get item info from inventory (param: ProductName)
     app.post("/api/inventory/getItem", (req, res)=>{
         db.collection('inventory')
-        .findOne({name: req.body.name})
+        .findOne({"ProductDetail.ProductName": req.body.ProductName})
         .then(obj=>{
             res.status(200).send({
-                price: obj.price, 
-                quantity: obj.quantity, 
-                description: obj.description,
+                price: obj.ProductDetail.ProductPrice, 
+                description: obj.ProductDetail.ProductDescription,
+                sold: obj.ProductSoldCount,
             });
         })
         .catch( e=> {
             res.status(404).send('item not found');
         });
     });
+
+    //modify item in inventory
 
 });
 
