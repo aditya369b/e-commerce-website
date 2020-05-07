@@ -19,12 +19,28 @@ MongoClient.connect(url, (err, client)=>{
     console.log('Connected successfully to server');
     const db = client.db(itemDb);
 
-    //Api to create item in inventory
+    //Api
+    //create item in inventory
     app.post("/api/inventory/create", (req, res)=>{ 
         db.collection('inventory')
         .insertOne({name:req.body.name, price:req.body.price, quantity:req.body.quantity, description:req.body.description}, (err, item) => {
             if(err) res.status(404).send('Error: Item already exist');
             if(item) res.status(201).send('Item was successfully added to inventory');
+        });
+    });
+    //get item info from inventory
+    app.post("/api/inventory/getItem", (req, res)=>{
+        db.collection('inventory')
+        .findOne({name: req.body.name})
+        .then(obj=>{
+            res.status(200).send({
+                price: obj.price, 
+                quantity: obj.quantity, 
+                description: obj.description,
+            });
+        })
+        .catch( e=> {
+            res.status(404).send('item not found');
         });
     });
 
