@@ -54,8 +54,6 @@ MongoClient.connect(url, (err, client)=>{
         });
     });
 
-    //modify item in inventory
-
 });
 
 
