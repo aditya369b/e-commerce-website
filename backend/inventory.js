@@ -20,7 +20,8 @@ MongoClient.connect(url, (err, client)=>{
     const db = client.db(itemDb);
 
     //Api
-    //create item in inventory
+    //create item in inventory 
+    //param: {ProductName,ProductPrice,ProductDescription}
     app.post("/api/inventory/create", (req, res)=>{ 
         db.collection('inventory')
         .insertOne({
@@ -36,7 +37,8 @@ MongoClient.connect(url, (err, client)=>{
         });
     });
     
-    //get item info from inventory (param: ProductName)
+    //get item info from inventory 
+    //param: ProductName
     app.post("/api/inventory/getItem", (req, res)=>{
         db.collection('inventory')
         .findOne({"ProductDetail.ProductName": req.body.ProductName})
