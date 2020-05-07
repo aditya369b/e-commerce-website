@@ -17,14 +17,20 @@ apiProxy.on('error', (err, req, res) => {
 // api for transaction service
 
 // api for inventory service
+app.all('/api/inventory/*', (req, res) => {
+  apiProxy.web(req, res, {target: 'http://localhost:3004'});
+});
 
 // api for receipt service
 
+
+/* Template code
 app.all("*", (req, res) => {
     // front end server -> react
     apiProxy.web(req, res, {
       target: 'http://localhost:3000',
     });
   });
+*/
   
-  app.listen(port, () => console.log(`Gateway on port ${port}!`))
+app.listen(port, () => console.log(`Gateway on port ${port}!`))
