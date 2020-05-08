@@ -1,0 +1,22 @@
+.SellingItem {
+    background-color: #46377062;
+    text-align: center;
+    padding-top: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+}
+
+img{
+    float:left;    
+}
+
+.item_box{
+    margin: 20px;
+    position: static;
+    width: 60%;
+    height: 150;
+    box-shadow: 0 5px 10px 0 rgba(117, 119, 15, 0.2);
+    text-align: left;
+    
+}
