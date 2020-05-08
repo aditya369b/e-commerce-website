@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {Button} from "react-bootstrap";
-import './Purchases.css'
+import './Purchases.css' //temporary css update
 
 
 const Purchases = () => {
