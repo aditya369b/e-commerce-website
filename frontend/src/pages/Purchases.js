@@ -9,30 +9,54 @@ const Purchases = () => {
     const history = useHistory();
     const [loading, setLoading] = React.useState(false);
     const [purchases, setPurchases] = React.useState(
-        {p1:{name:1}, p2:{name:2}}
+        {date1:["item1", "item2"], date2:["item1", "item2"]}
         ); //dumby object for now, change to null when properly plugged into database
 
     //Get the User's Items from Database
-    axios.get('/api/inventory/getItem') //This url need to be connected to service
+    axios.get('/api/inventory/getItem') //This need to be connected to real url for getting the items
     .then(res =>{
         setLoading(false);
         setPurchases(res.data);
     })
     .catch(console.log);
 
-    //Create list of purchases
-    const list = Object.keys(purchases).map(item =>{
+    
+    //Create html for each purchase
+    function purchaseByDate(dates){
+        const date = purchases[dates];
         return(
-            <div class="item" value={item}>{purchases[item].name}</div>
+            date.forEach(item =>{
+                return(
+                    <div class="item">{date[item]}</div>
+                );
+            })
         );
-    })
+    };
+    //Create list of purchases by date
+    const dateList = Object.keys(purchases).map(dates =>{
+        return(
+            <div class="date" value={dates}>
+                {dates}
 
+                <div class="items">{Object.keys(purchases[dates]).map(item =>{
+                    return (
+                        <div class="item">{purchases[dates][item]}</div>
+                    );
+                })}</div>
+
+            </div>
+        );
+    });
+
+
+
+    //Component Returned
     return(
-        <div>
+        <div class="purchaseComponent">
             <Button onClick={() => {history.goBack()} }>Back</Button>
+            <h2>Purchase History</h2>
             {loading === true && <h4>Loading Purchase History...</h4>}
-            {list}
-            <h2>Purchase History Page</h2>
+            {dateList}
         </div>
     );
 };

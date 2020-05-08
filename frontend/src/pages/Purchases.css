@@ -1,4 +1,16 @@
+.purchaseComponent{
+    float: left;
+    margin-left: 3rem;
+}
+Button{
+    width: 8rem;
+    height: 2rem;
+    background-color: rgb(185, 182, 182);
+    margin: 2rem 0px;
+    float: left;
+}
 .item{
     border: 2px solid black;
     margin: 4px;
+    margin-left: 3rem;
 }
