@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import SellingItems from './pages/SellingItems';
+import ItemDescription from './pages/ItemDescription';
 import './pages/css_files/SellingItems.css';
 
 
