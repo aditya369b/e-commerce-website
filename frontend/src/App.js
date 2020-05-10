@@ -6,16 +6,19 @@ import { connect } from "react-redux";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import SellingItems from './pages/SellingItems';
+import './pages/css_files/SellingItems.css';
 
 
 function App({isLoggedIn}) {
   return (
-    <div className="App">
+    <div>
       <Switch>   
         <Route path="/signUp" component={SignUp} />
-        { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={Login} />) }
+        { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={SellingItems} />) }
         <Route path="/" component={Login} />
       </Switch>
+
     </div>
   );
 }
