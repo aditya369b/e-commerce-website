@@ -13,13 +13,13 @@ app.use(express.json()); // this is a middleware
 //apis
 
 client.connect((err) => {
-    if (err) {
-      console.log(err);
-      process.exit(1);
-    }
-  
-    console.log("Connected successfully to server");
-    const db = client.db(dbName);
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+
+  console.log("Connected successfully to server");
+  const db = client.db(dbName);
 
   // user authentication
   app.post("/api/auth/login", (req, res) => {
@@ -40,8 +40,7 @@ client.connect((err) => {
   });
 
   // For creating user/ signup
-  app.post("/api/db/signup", (req, res) => {
-
+  app.post("/api/auth/signup", (req, res) => {
     db.collection("UserCollection")
       .findOne({
         userId: req.body.userId,
@@ -59,7 +58,7 @@ client.connect((err) => {
         res.send("Error", e);
       });
 
-    db.collection("MyCollection")
+    db.collection("UserCollection")
       .insert({
         userId: req.body.userId,
         password: req.body.password,
@@ -77,6 +76,6 @@ client.connect((err) => {
         res.send("Error", e);
       });
   });
-  
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+  app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

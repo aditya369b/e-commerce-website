@@ -29,6 +29,7 @@ client.connect((err) => {
   const db = client.db(dbName);
 
   app.post("/api/item/create", (req, res) => {
+      // Should check whether itemId exisits in db or not. May do it at front end as well ????
     db.collection("ItemCollection")
       .insert({
         itemId: req.body.username + "_" + req.body.name, // unique id
@@ -119,33 +120,26 @@ client.connect((err) => {
     let itemDetails = [];
 
     db.collection("UserCollection")
-      .findOne({
-        userId: req.body.username,
-      })
-      .then((doc) => {
-        console.log(doc);
-        itemDetails = doc.itemDetails;
-        // res.send({ items: doc.itemDetails });
-      })
-      .catch((e) => {
-        console.log(e);
-        res.send("Error ", e);
-      });
-
-    //   db.collection("ItemCollection")
-    //   .find({
-    //     userId: req.body.username,
-    //   })
-    //   .then((doc) => {
-    //     console.log(doc);
-    //     itemDetails = doc.itemDetails;
-    //     // res.send({ items: doc.itemDetails });
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //     res.send("Error ", e);
-    //   });
-
+      .aggregate([
+        { $lookup:
+           {
+             from: 'ItemCollection',
+             localField: 'items',
+             foreignField: 'itemId',
+             as: 'itemDetails'
+           }
+         }
+        ]).toArray(function(err, response) {
+        if (err) throw err;
+        console.log(JSON.stringify(response));
+        for(let i=0; i<response.length; i++){
+            let resObj = response[i];
+            if(resObj["userId"] == req.body.username)
+            {   itemDetails = resObj["itemDetails"];
+                break;}
+        }
+        res.send({result : itemDetails});
+        });
   });
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
