@@ -8,7 +8,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import SellingItems from './pages/SellingItems';
 import ItemDescription from './pages/ItemDescription';
-import './pages/css_files/SellingItems.css';
+// import './pages/css_files/SellingItems.css';
 
 
 function App({isLoggedIn}) {
@@ -16,7 +16,9 @@ function App({isLoggedIn}) {
     <div>
       <Switch>   
         <Route path="/signUp" component={SignUp} />
-        { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={SellingItems} />) }
+        <Route path="/itemDescription" component={ItemDescription} />
+        <Route path="/sellingitem" component={SellingItems} />
+        {/* { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={SellingItems} />) } */}
         <Route path="/" component={Login} />
       </Switch>
 
