@@ -6,15 +6,22 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './redux/reducers/rootReducer';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import thunk from 'redux-thunk';
+import HomePage from './pages/HomePage';
+import SignUp from './pages/SignUp';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-    <App />
+      <App/>
     </Router>
   </Provider>,
   document.getElementById('root')
