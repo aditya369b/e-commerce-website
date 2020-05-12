@@ -44,6 +44,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
     }, [dispatch]);
 
 
+    const [showPurchaseHistory, setShowPurchaseHistory] = React.useState(false);
     const [createNewUser, setCreateNewUser] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
     function openModal() {
@@ -97,6 +98,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
 
    
     if (createNewUser) return <Redirect to="/signup/" />;
+    else if (showPurchaseHistory) return <Redirect to="/purchase-history/" />;
 
     else
         return (
@@ -137,7 +139,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
                     </Modal>
                 </div>
                 <div>
-                    <button> Purchase History </button>
+                    <button onClick={() => setShowPurchaseHistory(true)}> Purchase History </button>
                     <button onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </button>
                 </div>
                 <div>

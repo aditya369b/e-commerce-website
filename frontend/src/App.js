@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
-import HomePage from './pages/HomePage';
+import Purchases from './pages/Purchases';
 
 import {
   setUsername,
@@ -9,6 +9,7 @@ import {
 } from "./redux/actions/userActions";
 import Cookies from 'universal-cookie';
 import Signup from "./pages/SignUp";
+import HomePage from "./pages/HomePage";
 const cookies = new Cookies();
 
 const App = ({ dispatch }) => {
@@ -29,6 +30,7 @@ const App = ({ dispatch }) => {
       <div>
         <Switch>
           <Route path="/signup" component={Signup} />
+          <Route path="/purchase-history" component={Purchases} />
           <Route path="/" component={HomePage} />
         </Switch>
       </div>
