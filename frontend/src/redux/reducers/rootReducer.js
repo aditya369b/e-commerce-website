@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import itemsReducer from './itemsReducer';
 import userReducer from './userReducer';
+import homePageReducer from './homePageReducer';
 
 export default combineReducers({
   itemsReducer,
+  homePageReducer,
   userReducer,
 });
 

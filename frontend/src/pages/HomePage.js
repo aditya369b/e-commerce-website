@@ -15,6 +15,7 @@ import Cookies from 'universal-cookie';
 import { buyItem } from "../redux/actions/itemsActions";
 const cookies = new Cookies();
 
+
 const customStyles = {
     content: {
         top: '50%',
@@ -26,11 +27,9 @@ const customStyles = {
     }
 };
 
-const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) => {
+const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws, dispatch }) => {
 
     Modal.setAppElement('#root');
-    
-
     React.useEffect(() => {
         let cookie_uname = cookies.get('username', { path: '/' });
         let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
@@ -71,7 +70,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
         console.log(username)
         const body = {
 
-            "username": username,
+            "userId": username,
             "password": md5(password)
         };
         console.log("Making a Call to Server")
@@ -96,13 +95,13 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
             .catch(console.log());
     };
 
-   
+
     if (createNewUser) return <Redirect to="/signup/" />;
     else if (showPurchaseHistory) return <Redirect to="/purchase-history/" />;
 
     else
         return (
-            <div className="App">
+            <div className="HomePage">
                 <div>
                     <h2> Welcome to Shoppers Paradise {username}</h2>
                     <Modal
@@ -143,11 +142,19 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
                     <button onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </button>
                 </div>
                 <div>
-                    <marquee behavior="scroll" direction="left">Here is some scrolling text... right to left!</marquee>
+                    <marquee behavior="scroll" direction="left">{messages.slice(messages.length- 10)}</marquee>
                 </div>
                 <div>
                     <ol>
-                        {items.map((item, i) => (< li key={i} id={item.id} > {item.itemName} {item.itemCost} {item.itemCount} <button id={item.id} onClick={() => dispatch(buyItem(item.id, items))}> Buy Item Now</button> </li>))}
+                        {items.map((item, i) => (
+                            <li key={i} id={item.id}>
+                                {item.itemName}
+                                {item.itemCost}
+                                {item.itemCount}
+                                {item.viewCount}
+                                {"     "}{item.itemViewCount}
+                                <button id={item.id} onClick={() => dispatch(buyItem(item.id, items, ws))}> Buy Item Now</button>
+                            </li>))}
                     </ol >
                 </div>
             </div>
@@ -161,7 +168,8 @@ const mapStateToProps = (state) => {
         password: state.userReducer.password,
         isLoggedIn: state.userReducer.isLoggedIn,
         isError: state.userReducer.isError,
-        items: state.itemsReducer.items
+        items: state.itemsReducer.items,
+        messages: state.homePageReducer.messages,
     };
 };
 
