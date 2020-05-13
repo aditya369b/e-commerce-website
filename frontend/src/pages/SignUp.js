@@ -4,7 +4,6 @@ import React from "react";
 const Signup = () => {
   
   const [value, setValue] = React.useState("");
-
   return (
     <div>
       <h2> Signup Page </h2>
