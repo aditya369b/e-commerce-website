@@ -1,43 +1,56 @@
+// Creating a reducer
+
+// Step 1 initialize state
 const INITIAL_STATE = {
-    user: '', /** username/userid */ 
-    password: '',
-    userType: '', /** Buyer or Seller */
+    username: "",
+    password: "",
     isLoggedIn: false,
-    loadingState: 'init',
-};
+    isNewUser: true,
+    isError: false
+  };
   
-const userReducer = (state = INITIAL_STATE, action) => {
-
-    switch(action. type){
-        case 'USER_SET_USER':
-            return{
-                ...state, 
-                user: action.user,
-            };
-        case 'USER_SET_PASSWORD':
-            return{
-                ...state, 
-                password: action.password,
-            };
-        case 'USER_SET_USER_TYPE':
-            return{
-                ...state, 
-                userType: action.userType,
-            };
-        case 'USER_SET_IS_LOGGED_IN':
-            return{
-                ...state, 
-                isLoggedIn: action.isLoggedIn,
-            };
-        case 'USER_SET_LOADING_STATE':
-            return{
-                ...state, 
-                loadingState: action.loadingState,
-            };
-            
-        default:
-            return state;        
+  // Step 2 create listener function
+  const userReducer = (state = INITIAL_STATE, action) => {
+    // Step 3 create switch for action types
+    switch (action.type) {
+      case "SET_ACTIVE_USERS":
+        return {
+          ...state,
+          activeUsers: action.activeUsers,
+        };
+      case "SET_IS_LOGGED_IN":
+        return {
+          ...state,
+          isLoggedIn: action.isLoggedIn,
+        };
+      case "SET_USERNAME":
+        return {
+          ...state, // spread operator
+          // email: state.email,
+          // isLoggedIn: state.isLoggedIn,
+          username: action.username,
+        };
+      case "SET_PASSWORD":
+        return {
+          ...state,
+          password: action.password,
+        };
+      case "CHECK_NEW_USER":
+        return {
+          ...state,
+          isNewUser: action.isNewUser
+        }
+      case "SET_ERROR":
+        return {
+          ...state,
+          isError: action.isError
+        }
+  
+      default:
+        return state;
     }
-};
-
-export default userReducer;
+  };
+  
+  // don't forget to export
+  export default userReducer;
+  
