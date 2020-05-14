@@ -31,6 +31,7 @@ MongoClient.connect(url, (err, client)=>{
     });
     //get item info from inventory
     app.post("/api/inventory/getItem", (req, res)=>{
+        console.log("inside getitems")
         const rows = db.collection('inventory').find().toArray(function(err, result) {
             if (err) throw err;
             console.log(result);
