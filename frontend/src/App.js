@@ -12,7 +12,7 @@ import Signup from "./pages/SignUp";
 import HomePage from "./pages/HomePage";
 const cookies = new Cookies();
 
-const App = ({ dispatch }) => {
+const App = ({ ws, dispatch }) => {
   React.useEffect(() => {
     let cookie_uname = cookies.get('username', { path: '/' });
     let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
@@ -29,9 +29,15 @@ const App = ({ dispatch }) => {
     <div className="App">
       <div>
         <Switch>
-          <Route path="/signup" component={Signup} />
-          <Route path="/purchase-history" component={Purchases} />
-          <Route path="/" component={HomePage} />
+          <Route path="/signup" >
+            <Signup ws={ws} />
+          </Route>
+          <Route path="/purchase-history" >
+            <Purchases ws={ws} />
+          </Route>
+          <Route path="/">
+            <HomePage ws={ws} />
+          </Route>
         </Switch>
       </div>
     </div>

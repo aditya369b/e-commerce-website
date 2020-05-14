@@ -29,6 +29,16 @@ export const setIsError = (isError) => ({
     isError
 })
 
+export const setAddress = (address) => ({
+    type: 'SET_ADDRESS',
+    address
+})
+
+export const setEmailAddress = (email_address) => ({
+    type: 'SET_ADDRESS',
+    email_address
+})
+
 export const SignupUser = () => (dispatch, getState) => {
 
     console.log(getState().userReducer.password)
@@ -42,6 +52,9 @@ export const SignupUser = () => (dispatch, getState) => {
 
         "username": getState().userReducer.username,
         "password": md5(getState().userReducer.password),
+        "contact-address": getState().userReducer.address,
+        "email-address": getState().userReducer.email_address,
+
     };
     console.log("Creating user-profile")
     axios

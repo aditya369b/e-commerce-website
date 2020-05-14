@@ -5,6 +5,7 @@ const DEFAULT_STATE = {
             id: "01",
             itemCost: "100$",
             itemCount: 10,
+            itemViewCount:0,
             itemDecription: "Macaroni and cheese—also called mac n' cheese in the US and Canadian English, macaroni cheese in the United Kingdom—is a dish of English origin, consisting of cooked macaroni pasta and a cheese sauce, most commonly cheddar."
         },
         {
@@ -12,6 +13,7 @@ const DEFAULT_STATE = {
             id: "02",
             itemCost: "200$",
             itemCount: 10,
+            itemViewCount:0,
             itemDecription: "Macaroni and cheese—also called mac n' cheese in the US and Canadian English, macaroni cheese in the United Kingdom—is a dish of English origin, consisting of cooked macaroni pasta and a cheese sauce, most commonly cheddar."
         },
         {
@@ -19,6 +21,7 @@ const DEFAULT_STATE = {
             id: "03",
             itemCost: "300$",
             itemCount: 10,
+            itemViewCount:0,
             itemDecription: "Macaroni and cheese—also called mac n' cheese in the US and Canadian English, macaroni cheese in the United Kingdom—is a dish of English origin, consisting of cooked macaroni pasta and a cheese sauce, most commonly cheddar."
         },
         {
@@ -26,6 +29,7 @@ const DEFAULT_STATE = {
             id: "04",
             itemCost: "400$",
             itemCount: 10,
+            itemViewCount:0,
             itemDecription: "Macaroni and cheese—also called mac n' cheese in the US and Canadian English, macaroni cheese in the United Kingdom—is a dish of English origin, consisting of cooked macaroni pasta and a cheese sauce, most commonly cheddar."
         },
         {
@@ -33,6 +37,7 @@ const DEFAULT_STATE = {
             id: "05",
             itemCost: "500$",
             itemCount: 10,
+            itemViewCount:0,
             itemDecription: "Macaroni and cheese—also called mac n' cheese in the US and Canadian English, macaroni cheese in the United Kingdom—is a dish of English origin, consisting of cooked macaroni pasta and a cheese sauce, most commonly cheddar."
         },
     ],

@@ -10,13 +10,43 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 import thunk from 'redux-thunk';
+import { setItemViewCount } from './redux/actions/itemsActions';
+import { insertMessage } from './redux/actions/homePageActions';
 
+
+const ws = new WebSocket('ws://localhost:3002')
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
+ws.onclose = () => {
+  console.log("Connection to server Closed")
+}
+ws.onmessage = (mesage) => {
+  const messageObject = JSON.parse(mesage.data)
+  console.log("Message from the server");
+  console.log(messageObject);
+  switch (messageObject.type) {
+    case 'UPDATE_USER_COUNT':
+      console.log("Index.Js" + mesage.data)
+      store.dispatch(setItemViewCount(messageObject.id, messageObject.count, store.getState().itemsReducer.items))
+      break;
+    case 'UPDATE_MESSAGE':
+      store.dispatch(insertMessage(messageObject.notificationMessage))
+      break;
+    default:
+      console.log("No Default Message Handler")
+
+  }
+}
+ws.onerror = (e) => {
+  console.log("error" + e)
+}
+ws.onopen = () => {
+  console.log("Connection to server Opened")
+}
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <App ws={ws}/>
     </Router>
   </Provider>,
   document.getElementById('root')
