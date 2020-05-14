@@ -6,19 +6,22 @@ export default class ItemsDashboard extends Component {
     constructor(props){
         super(props)
         this.state = {
-            data: ''
+            data: []
         }
     }
 
-    componentDidMount() {
-        axios.post("/api/inventory/getItem")
+    componentWillMount() {
+        axios.post("/api/item/getInfo",{
+            "username" : "aditya"
+        })
         .then(items => { 
             
-            this.setState({data: items.data})
+            this.setState({data: items.data.result})
         })
         .catch(err => console.log(err))
         console.log(this.state.data)
     }
+    
 
     render() {
         const dataitems = this.state.data
@@ -31,21 +34,22 @@ export default class ItemsDashboard extends Component {
                         <tr>
                             <th> Item Name </th> 
                             <th> Item Price </th> 
-                            <th> Item Quantity </th> 
+                            <th> Item Date </th> 
                             <th> Item Description </th> 
                         </tr>
                     </thead>    
                     <tbody>
                         {this.state.data && dataitems.map((items) => (
-                            <tr key= {items._id}>
-                                <td> {items.name} </td> 
-                                <td> {items.price} </td>
-                                <td> {items.quantity} </td>
-                                <td>{items.description} </td>
+                            <tr key= {items._id} >
+                                <td> {items.itemDetails.itemName} </td> 
+                                <td> {items.itemDetails.itemPrice} </td>
+                                <td> {items.itemDetails.itemDate} </td>
+                                <td>{items.itemDetails.itemDesc} </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
+                
             </div>
         )
     }

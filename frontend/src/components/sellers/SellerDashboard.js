@@ -6,10 +6,12 @@ export default class Dashboard extends Component {
     constructor(props){
         super(props)
         this.state = {
+                username: "aditya",
                 item_name: "",
                 item_price: "",
                 item_quantity: "",
-                item_description: ""
+                item_description: "",
+                item_date: new Date()
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +26,8 @@ export default class Dashboard extends Component {
     handleSubmit(e){
         e.preventDefault();
         console.log(this.state)
-            axios.post("/api/inventory/create",this.state)
+        this.state.item_date = new Date();
+            axios.post("/api/item/create",this.state)
             .then(res  => console.log(res))
             .catch(err => {
                 if(err.response){
