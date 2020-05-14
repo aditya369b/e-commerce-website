@@ -1,6 +1,6 @@
 import React from "react";
 
-/** Buyer/Seller  dashboard */ 
+/** Login page */ 
 const Login = () => {
   
   const [value, setValue] = React.useState("");
