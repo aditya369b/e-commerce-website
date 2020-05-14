@@ -10,7 +10,7 @@ export default class ItemsDashboard extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         axios.post("/api/inventory/getItem")
         .then(items => { 
             
@@ -37,7 +37,7 @@ export default class ItemsDashboard extends Component {
                     </thead>    
                     <tbody>
                         {this.state.data && dataitems.map((items) => (
-                            <tr key= {items._id} >
+                            <tr key= {items._id}>
                                 <td> {items.name} </td> 
                                 <td> {items.price} </td>
                                 <td> {items.quantity} </td>
@@ -46,7 +46,6 @@ export default class ItemsDashboard extends Component {
                         ))}
                     </tbody>
                 </Table>
-                
             </div>
         )
     }

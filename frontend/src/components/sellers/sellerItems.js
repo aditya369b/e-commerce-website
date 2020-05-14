@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import Dashboard from './SellerDashboard'
 import ItemsDashboard from './ItemsDashboard'
-import { Button } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
 
 export default class SellerItems extends Component {
     constructor(props){
         super(props)
         this.state = {
             showForm: false,
-            showItem: false
+            showItem: true
         }
         this.ShowForm = this.ShowForm.bind(this)
         this.ShowItem = this.ShowItem.bind(this)

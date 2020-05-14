@@ -24,21 +24,23 @@ export default class Dashboard extends Component {
     handleSubmit(e){
         e.preventDefault();
         console.log(this.state)
-        axios.post("/api/inventory/create",this.state)
-        .then(res  => console.log(res))
-        .catch(err => {
-            if(err.response){
-                console.log("Response error")
-            }
-            else if(err.request){
-                console.log("request error")
-            }
-        });
-        
-    }
+            axios.post("/api/inventory/create",this.state)
+            .then(res  => console.log(res))
+            .catch(err => {
+                if(err.response){
+                    console.log("Response error")
+                }
+                else if(err.request){
+                    console.log("request error")
+                }
+            });
+        }
+    
 
     render() {
-        return (<Form onSubmit={this.handleSubmit}>
+        return (        
+        <Form onSubmit={this.handleSubmit}>
+
             <div>
                 <Input label="Item Name" type="text" id="item_name" onChange={this.handleChange} value={this.state.item_name} />
             </div>
