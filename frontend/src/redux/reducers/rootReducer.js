@@ -7,6 +7,7 @@ export default combineReducers({
   itemsReducer,
   homePageReducer,
   userReducer,
+  sellerReducer
 });
 
 

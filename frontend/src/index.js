@@ -13,7 +13,6 @@ import thunk from 'redux-thunk';
 import { setItemViewCount } from './redux/actions/itemsActions';
 import { insertMessage } from './redux/actions/homePageActions';
 
-
 const ws = new WebSocket('ws://localhost:3002')
 const store = createStore(rootReducer, applyMiddleware(thunk));
 

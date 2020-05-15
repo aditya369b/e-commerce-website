@@ -57,7 +57,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         email_address: action.email_address
       }
-
     default:
       return state;
   }
