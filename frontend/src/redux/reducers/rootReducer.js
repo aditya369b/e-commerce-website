@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import itemsReducer from './itemsReducer';
 import userReducer from './userReducer';
+import sellerReducer from './sellerReducers'
 
 export default combineReducers({
   itemsReducer,
   userReducer,
+  sellerReducer
 });
 
 

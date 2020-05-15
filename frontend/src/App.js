@@ -6,14 +6,15 @@ import { connect } from "react-redux";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import SellersDashboard from './components/sellers/sellersDashboard';
 
 function App({isLoggedIn}) {
   return (
     <div className="App">
       <Switch>   
         <Route path="/signUp" component={SignUp} />
-        { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={Login} />) }
+        { isLoggedIn? (<Route path="/" component={Home} />) : (<Route path="/" component={SellersDashboard} />) }
         <Route path="/" component={Login} />
       </Switch>
     </div>

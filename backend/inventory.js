@@ -38,7 +38,7 @@ client.connect((err) => {
           itemPrice: req.body.price,
           itemDesc: req.body.desc,
           itemDate: req.body.date,
-          itemURL: req.body.URL,
+         // itemURL: req.body.URL,
         },
         seller: req.body.username,
         salesCount: 0,
@@ -140,6 +140,15 @@ client.connect((err) => {
         }
         res.send({result : itemDetails});
         });
+  });
+
+  app.get("/api/item/getItems", (req, res)=>{
+    console.log("inside getitems")
+    const rows = db.collection('ItemCollection').find().toArray(function(err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.send(result)
+    })
   });
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
