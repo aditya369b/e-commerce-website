@@ -45,12 +45,24 @@ export const setItemsAdded = (status) => {
     }
 }
 
-export const setGetitems = (data) => {
+export const setGetItems = (data) => {
     return{
         type:'GET_ITEMS',
         payload: {
             items: data
         }
+    }
+}
+
+export const setUpdateItems = () => {
+    return{
+        type: 'EDIT_ITEMS',
+    }
+}
+
+export const setEditItems = () => {
+    return{
+        type: 'EDIT_ITEMS',
     }
 }
 
