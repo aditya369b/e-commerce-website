@@ -1,6 +1,7 @@
-//Run these commands to start the backend services
-// pm2 start .\process.config.js
-// pm2 monit
+// Start Redis server and mongodb
+// Run these commands to start the backend services
+// 1. pm2 start .\process.config.js
+// 2. pm2 monit
 
 //To kill - pm2 kill
 
