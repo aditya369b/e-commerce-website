@@ -39,8 +39,8 @@ client.connect((err) => {
 
 
         /** Creates items in db */
-    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date(), itemURL: ""}
-    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date(), itemURL: ""}
+    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date(), itemURL: ""};
+    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date(), itemURL: ""};
 
     defaultItems = [
         {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", salesCount: 0, forSale : true},
