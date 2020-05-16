@@ -1,22 +1,28 @@
 const express = require("express");
 const app = express();
 const port = 3003;
-// const redis = require('redis');
-// const client = redis.createClient();
 
 const KafkaProducer = require('./Kafka/KafkaProducer.js');
 
 const producer = new KafkaProducer('myTopic');
 
+const { MongoClient, ObjectID } = require("mongodb");
+const url = "mongodb://localhost:27017";
+const dbName = "MochaDatabase";
+const client = new MongoClient(url);
+
 app.use(express.json()); // this is a middleware
 
-// app.get('/service1/*', (req, res) => {
-//     console.log("Hi! world!");
-// client.publish('transactionChannel', `Hello has been visited`);
-
-// });
-
 //apis
+
+client.connect((err) => {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+
+  console.log("Connected successfully to server");
+  const db = client.db(dbName);
 
 app.post('/transaction', (req,res) => {
 
@@ -26,6 +32,8 @@ app.post('/transaction', (req,res) => {
   
     let date = new Date();
     // let transactionId = _id;
+
+    let result = {}
         // records the transaction
     db.collection("transactionCollection")
         .insert({
@@ -35,7 +43,7 @@ app.post('/transaction', (req,res) => {
           purchaseDate: date,
         })
         .then((doc) => {
-          res.send({valid: true, result: doc,});
+          result["transaction"] = {valid: true, result: doc,};
         })
         .catch((e) => {
           console.log(e);
@@ -54,7 +62,7 @@ app.post('/transaction', (req,res) => {
         )
         .then((doc) => {
           console.log(doc);
-          res.send({ valid: doc });
+          result["buyer"] = { valid: doc };
         })
         .catch((e) => {
           console.log(e);
@@ -73,20 +81,17 @@ app.post('/transaction', (req,res) => {
         )
         .then((doc) => {
           console.log(doc);
-          res.send({ valid: doc });
+          result["transaction"] = { valid: doc };
         })
         .catch((e) => {
           console.log(e);
           res.send("Error ", e);
         });
-  
-
-
 
     console.log('Pushing new item to queue');
     producer.send(req.body);
-    res.send('Item added to queue');
-})
-
+    res.send(result);
+});
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
