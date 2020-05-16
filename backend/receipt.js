@@ -1,9 +1,16 @@
-const express = require("express");
-const app = express();
-const port = 3005;
+const KafkaConsumer = require('./KafkaConsumer');
 
-app.use(express.json()); // this is a middleware
+const consumer = new KafkaConsumer(['myTopic', 'myOtherTopic']);
+    // req.body is received. ALl transaction logic here
+consumer.on('message', (message) => {
+  // console.log(message);
+  console.log('New item has been read');
 
-//apis
+  params = message.value;
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+    // All receipt logic
+
+
+});
+
+consumer.connect();
