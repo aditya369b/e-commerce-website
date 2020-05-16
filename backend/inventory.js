@@ -34,7 +34,7 @@ client.connect((err) => {
         itemDetails: {
           itemName: req.body.item_name,
           itemPrice: req.body.item_price,
-          itemDesc: req.body.item_desc,
+          itemDesc: req.body.item_description,
           itemDate: req.body.item_date,
           itemURL: req.body.item_URL,
         },
