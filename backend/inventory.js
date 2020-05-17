@@ -5,7 +5,7 @@ const port = 3004;
 /** Database */
 const { MongoClient, ObjectID } = require("mongodb");
 const url = "mongodb://localhost:27017";
-const dbName = "TestDatabase";
+const dbName = "Mocha";
 const client = new MongoClient(url);
 
 app.use(express.json()); // this is a middleware
