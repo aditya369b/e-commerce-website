@@ -4,7 +4,7 @@ const { MongoClient, ObjectID } = require("mongodb");
 const url = "mongodb://localhost:27017";
 
 // Database Name
-const dbName = "TestDatabase";
+const dbName = "Mocha";
 
 // Create a new MongoClient
 const client = new MongoClient(url);

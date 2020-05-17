@@ -5,7 +5,7 @@ const port = 3004;
 /** Database */
 const { MongoClient, ObjectID } = require("mongodb");
 const url = "mongodb://localhost:27017";
-const dbName = "MochaDatabase";
+const dbName = "Mocha";
 const client = new MongoClient(url);
 
 app.use(express.json()); // this is a middleware
@@ -13,10 +13,15 @@ app.use(express.json()); // this is a middleware
 //apis
 /*
 
+POST:
 "/api/item/create" - To add an item in db
 "/api/item/edit" - To edit an item
 "/api/item/delete" - To modify an item as unavailable
-"/api/item/getInfo" - To fetch item details for a buyer/seller
+"/api/item/getInfo" - To fetch item details for a seller
+"/api/item/purchaseHistory" - To fetch purchased item details for a buyer
+
+GET:
+"/api/item/getAllItems" - To fetch all the items
 
 */
 client.connect((err) => {
@@ -140,6 +145,28 @@ client.connect((err) => {
         }
         res.send({result : itemDetails});
         });
+  });
+
+  app.post("/api/item/purchaseHistory", (req, res) => {
+    let itemDetails = [];
+    let user = req.body.username;
+    db.collection('TransCollection').find({buyer : user}).toArray(function(err, result) {
+      if (err) res.send(err);
+
+      console.log(result);
+      res.send({result : result});
+    });
+  });
+
+  app.get("/api/item/getAllItems", (req, res) => {
+    
+    db.collection('ItemCollection').find({}).toArray(function(err, result) {
+      if (err) res.send(err);
+
+      console.log(result);
+      res.send({result : result});
+    }); 
+
   });
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));

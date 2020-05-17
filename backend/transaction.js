@@ -8,12 +8,18 @@ const producer = new KafkaProducer('myTopic');
 
 const { MongoClient, ObjectID } = require("mongodb");
 const url = "mongodb://localhost:27017";
-const dbName = "MochaDatabase";
+const dbName = "Mocha";
 const client = new MongoClient(url);
 
 app.use(express.json()); // this is a middleware
 
 //apis
+/*
+
+  POST:
+  "/api/transaction" - To record a transaction/purchase
+
+*/
 
 client.connect((err) => {
   if (err) {
@@ -24,10 +30,10 @@ client.connect((err) => {
   console.log("Connected successfully to server");
   const db = client.db(dbName);
 
-app.post('/transaction', (req,res) => {
+app.post('/api/transaction', (req,res) => {
 
     let username = req.body.username;
-    let items = req.body.items;
+    let items = req.body.itemId;
     let price = req.body.price;
   
     let date = new Date();
