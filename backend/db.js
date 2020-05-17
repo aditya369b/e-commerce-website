@@ -26,8 +26,8 @@ client.connect((err) => {
 
     /** Creates users in the db */
     defaultUsers = [
-        {userId: "test_seller", password: 123, userType: "seller", email: "", items : ["test_seller_reader", "test_seller_book"]},
-        {userId: "test_buyer", password: 123, userType: "buyer", email: "", items : ["test_seller_book"]},
+        {userId: "test_seller", password: "123", userType: "seller", email: "", items : ["test_seller_reader", "test_seller_book"]},
+        {userId: "test_buyer", password: "123", userType: "buyer", email: "", items : ["test_seller_book"]},
     ]
         
     db.collection("UserCollection")
