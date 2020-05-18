@@ -2,8 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Button, ListGroup} from "react-bootstrap";
-import '../stylesheets/Purchases.css' //temporary css update
-
+import '../stylesheets/Purchases.css'
 
 const Purchases = () => {
     const [loading, setLoading] = React.useState(false);
@@ -26,14 +25,18 @@ const Purchases = () => {
     //Create list of purchases by date
     const dateList = Object.keys(purchases).map(dates => {
         return (
+            <div class="dates">
             <ListGroup value={dates}>
                 <h4>{dates}</h4>
+                <div class="items">
                 {Object.keys(purchases[dates]).map(item => {
                     return (
                         <ListGroup.Item>{purchases[dates][item]}</ListGroup.Item>
                     );
                 })}
+                </div>
             </ListGroup>
+            </div>
         );
     });
 
@@ -44,13 +47,13 @@ const Purchases = () => {
     else
         //Component Returned
         return (
-            <div>
+            <div class="purchaseComponent">
                 <Button variant="outline-primary" onClick={() => { setToHomePage(true) }}>Back</Button>
-                <div>
                     <h2 class="title">Your Purchase History</h2>
-                    {loading === true && <h4>Loading Purchase History...</h4>}
-                    {dateList}
-                </div>
+                    <div class="contents">
+                        {loading === true && <h4>Loading Purchase History...</h4>}
+                        {dateList}
+                    </div>
             </div>
         );
 };

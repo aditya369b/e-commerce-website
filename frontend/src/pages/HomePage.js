@@ -14,6 +14,7 @@ import {
 import Cookies from 'universal-cookie';
 import { buyItem } from "../redux/actions/itemsActions";
 import {Button, Nav, Table} from 'react-bootstrap';
+import '../stylesheets/HomePage.css'
 
 const cookies = new Cookies();
 
@@ -103,9 +104,9 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
 
     else
         return (
-            <div className="HomePage">
+            <div className="homepage">
                 <div>
-                    <h2> Welcome to Shoppers Paradise {username}</h2>
+                    <h1 class="title">Welcome to Shoppers Paradise {username}</h1>
                     <Modal
                         isOpen={modalIsOpen}
                         onAfterOpen={afterOpenModal}
@@ -142,7 +143,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                     </Modal>
                 </div>
 
-                <div>
+                <div class="nav">
                     <Nav variant="tabs" defaultActiveKey="/">
                         <Nav.Item>
                             <Nav.Link href="/">Home</Nav.Link>

@@ -12,7 +12,7 @@ import {
   setIsError,
   setIsLoggedIn,
 } from "../redux/actions/userActions";
-import {Button, InputGroup} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import "../stylesheets/SignUp.css"
 
 const cookies = new Cookies();
