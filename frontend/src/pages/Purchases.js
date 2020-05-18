@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, ListGroup} from "react-bootstrap";
 import '../stylesheets/Purchases.css' //temporary css update
 
 
@@ -26,14 +26,14 @@ const Purchases = () => {
     //Create list of purchases by date
     const dateList = Object.keys(purchases).map(dates => {
         return (
-            <div class="date" value={dates}>
-                {dates}
-                <div class="items">{Object.keys(purchases[dates]).map(item => {
+            <ListGroup value={dates}>
+                <h4>{dates}</h4>
+                {Object.keys(purchases[dates]).map(item => {
                     return (
-                        <div class="item">{purchases[dates][item]}</div>
+                        <ListGroup.Item>{purchases[dates][item]}</ListGroup.Item>
                     );
-                })}</div>
-            </div>
+                })}
+            </ListGroup>
         );
     });
 

@@ -13,6 +13,8 @@ import {
 } from "../redux/actions/userActions";
 import Cookies from 'universal-cookie';
 import { buyItem } from "../redux/actions/itemsActions";
+import {Button, Nav, Table} from 'react-bootstrap';
+
 const cookies = new Cookies();
 
 
@@ -110,7 +112,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                         onRequestClose={closeModal}
                         style={customStyles}
                         contentLabel="login-modal-form">
-                        <button onClick={closeModal}>close</button>
+                        <Button variant="outline-dark" onClick={closeModal}>close</Button>
                         <div>
                             {isError && <h4> Check Credentials Again </h4>}
                             <form>
@@ -131,31 +133,54 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                                         onChange={(e) => dispatch(setPassword(e.target.value))}>
                                     </input>
                                 </div>
-                                <button onClick={() => LoginUser()} type="button"> Login </button>
-                                <button type="button" onClick={() => setCreateNewUser(true)}> Create Profile </button>
+                                <div>
+                                <Button variant="outline-success" onClick={() => LoginUser()}> Login </Button>
+                                <Button variant="outline-primary" onClick={() => setCreateNewUser(true)}> Create Profile </Button>  
+                                </div>
                             </form>
                         </div>
                     </Modal>
                 </div>
+
                 <div>
-                    <button onClick={() => setShowPurchaseHistory(true)}> Purchase History </button>
-                    <button onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </button>
+                    <Nav variant="tabs" defaultActiveKey="/">
+                        <Nav.Item>
+                            <Nav.Link href="/">Home</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick={() => setShowPurchaseHistory(true)}> Purchase History </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
                 </div>
+
                 <div>
                     <marquee behavior="scroll" direction="left">{messages.slice(messages.length- 10)}</marquee>
                 </div>
                 <div>
-                    <ol>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price ($)</th>
+                            <th>Quantity</th>
+                            <th>Views</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {items.map((item, i) => (
-                            <li key={i} id={item.id}>
-                                {item.itemName}
-                                {item.itemCost}
-                                {item.itemCount}
-                                {item.viewCount}
-                                {"     "}{item.itemViewCount}
-                                <button id={item.id} onClick={() => dispatch(buyItem(item.id, items, ws))}> Buy Item Now</button>
-                            </li>))}
-                    </ol >
+                            <tr variant="light" key={i} id={item.id}>
+                                    <td>{item.itemName}</td>
+                                    <td>{item.itemCost}</td>
+                                    <td>{item.itemCount}</td>
+                                    <td>{"     "}{item.itemViewCount}</td>
+                                    <td><Button variant="primary" id={item.id} onClick={() => dispatch(buyItem(item.id, items, ws))}> Buy Item Now</Button></td>
+                            </tr>))}
+                    </tbody>
+                </Table>
                 </div>
             </div>
         );
