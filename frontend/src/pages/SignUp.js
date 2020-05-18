@@ -12,6 +12,9 @@ import {
   setIsError,
   setIsLoggedIn,
 } from "../redux/actions/userActions";
+import {Button, InputGroup} from "react-bootstrap";
+import "../stylesheets/SignUp.css"
+
 const cookies = new Cookies();
 
 const Signup = ({ username, password, address, email_address, isNewUser, isError, dispatch }) => {
@@ -63,10 +66,11 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
     return (
       <div>
         {isError && <h4> Use a different Username </h4>}
-        <div>
-          <button onClick={() => { setToHomePage(true) }}>Back</button>
+        <div class="signupComponent">
+          <Button variant="outline-primary" onClick={() => { setToHomePage(true) }}>Back</Button>
           <form>
-            <div>
+            <h1>Sign Up</h1>
+            <div class="field">
               <p>Username</p>
               <input
                 name="username"
@@ -74,7 +78,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
                 onChange={(e) => dispatch(setUsername(e.target.value))}
               ></input>
             </div>
-            <div>
+            <div class="field">
               <p>Password</p>
               <input
                 name="password"
@@ -82,7 +86,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
                 onChange={(e) => dispatch(setPassword(e.target.value))}
               ></input>
             </div>
-            <div>
+            <div class="field">
               <p>Contact Address</p>
               <input
                 name="address"
@@ -90,7 +94,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
                 onChange={(e) => dispatch(setAddress(e.target.value))}
               ></input>
             </div>
-            <div>
+            <div class="field">
               <p>Contact Email</p>
               <input
                 name="email"
@@ -99,10 +103,10 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
               ></input>
             </div>
 
-            <button onClick={() => SignupUser} type="button">
+            <Button class="signupbtn" variant="outline-success" onClick={() => SignupUser}>
               {" "}
           Signup{" "}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

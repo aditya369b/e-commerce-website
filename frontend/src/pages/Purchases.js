@@ -45,8 +45,8 @@ const Purchases = () => {
         //Component Returned
         return (
             <div>
-                <Button onClick={() => { setToHomePage(true) }}>Back</Button>
-                <div class="purchaseComponent">
+                <Button variant="outline-primary" onClick={() => { setToHomePage(true) }}>Back</Button>
+                <div>
                     <h2 class="title">Your Purchase History</h2>
                     {loading === true && <h4>Loading Purchase History...</h4>}
                     {dateList}
