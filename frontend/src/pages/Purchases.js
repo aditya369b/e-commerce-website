@@ -1,23 +1,29 @@
 import React from "react";
+import { connect } from "react-redux";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Button, ListGroup} from "react-bootstrap";
+import Cookies from 'universal-cookie';
 import '../stylesheets/Purchases.css'
 
-const Purchases = () => {
+const cookies = new Cookies();
+
+const Purchases = ({ username, isLoggedIn, isError, dispatch }) => {
     const [loading, setLoading] = React.useState(false);
 
     const [showHomePage, setToHomePage] = React.useState(false);
 
     const [purchases, setPurchases] = React.useState(
-        { date1: ["item1", "item2"], date2: ["itemA", "itemB", "itemC"], date3: ["item99"], date4: ["someitem"] }
+        // { date1: ["item1", "item2"], date2: ["itemA", "itemB", "itemC"], date3: ["item99"], date4: ["someitem"] }
+        {}
     ); //dumby object for now, change to null when properly plugged into database
 
     //Get the User's Items from Database
-    axios.get('/api/inventory/getItem') //This need to be connected to real url for getting the items
+    axios.post('/api/item/purchaseHistory',{"username" : username}) //This need to be connected to real url for getting the items
         .then(res => {
             setLoading(false);
-            setPurchases(res.data);
+            setPurchases(res.data.result);  
+            // console.log(res.data);
         })
         .catch(console.log);
 
@@ -58,4 +64,14 @@ const Purchases = () => {
         );
 };
 
-export default Purchases;
+const mapStateToProps = (state) => {
+
+    return {
+        username: state.userReducer.username,
+        isLoggedIn: state.userReducer.isLoggedIn,
+        isError: state.userReducer.isError,
+    };
+};
+
+export default connect(mapStateToProps)(Purchases);
+// export default Purchases;

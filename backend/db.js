@@ -1,4 +1,5 @@
 const { MongoClient, ObjectID } = require("mongodb");
+const md5 = require('md5');
 
 // Connection URL
 const url = "mongodb://localhost:27017";
@@ -26,8 +27,8 @@ client.connect((err) => {
 
     /** Creates users in the db */
     defaultUsers = [
-        {userId: "test_seller", password: "123", userType: "seller", email: "", items : ["test_seller_reader", "test_seller_book"]},
-        {userId: "test_buyer", password: "123", userType: "buyer", email: "", items : ["test_seller_book"]},
+        {name: "test seller", userId: "test_seller", password: md5("123"), userType: "seller", email: "", items : ["test_seller_reader", "test_seller_book"]},
+        {name: "test buyer", userId: "test_buyer", password: md5("123"), userType: "buyer", email: "", items : ["test_seller_book"]},
     ]
         
     db.collection("UserCollection")

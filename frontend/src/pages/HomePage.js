@@ -11,6 +11,8 @@ import {
     setIsLoggedIn,
     LogOutUser,
 } from "../redux/actions/userActions";
+import {setItems, } from "../redux/actions/itemsActions";
+
 import Cookies from 'universal-cookie';
 import { buyItem } from "../redux/actions/itemsActions";
 import {Button, Nav, Table} from 'react-bootstrap';
@@ -49,7 +51,16 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
     const [showPurchaseHistory, setShowPurchaseHistory] = React.useState(false);
     const [createNewUser, setCreateNewUser] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
+
+    axios.get('/api/item/getAllItems')
+        .then(res => {
+            dispatch(setItems(res.data.result));
+            // console.log(res.data);
+        })
+        .catch(console.log);
+
     function openModal() {
+        setShowPurchaseHistory(false);
         if (isLoggedIn) {
             dispatch(LogOutUser())
         }
@@ -79,9 +90,10 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         console.log("Making a Call to Server")
         dispatch(setIsError(false))
         axios
-            .post("/api/auth/authenticate", body)
+            .post("/api/auth/login", body)
             .then((res) => {
-                if (res.data) {
+                if (res.data.valid) {
+                    console.log(res.data);
                     cookies.set('username', username, { path: '/' });
                     cookies.set('loggedin', 'true', { path: '/' });
                     dispatch(setIsError(false));
@@ -98,15 +110,23 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
             .catch(console.log());
     };
 
+    function openPurchaseHistory(){
+        return (<Redirect to="/purchase-history/" />);
+    }
 
     if (createNewUser) return <Redirect to="/signup/" />;
-    else if (showPurchaseHistory) return <Redirect to="/purchase-history/" />;
+    else if (showPurchaseHistory) {
+        if(isLoggedIn)
+            return (<Redirect to="/purchase-history/" />);
+        else
+            openModal();
+        }
 
     else
         return (
             <div className="homepage">
                 <div>
-                    <h1 class="title">Welcome to Shoppers Paradise {username}</h1>
+                    <h1 class="title">Welcome to Shoppers Paradise </h1>
                     <Modal
                         isOpen={modalIsOpen}
                         onAfterOpen={afterOpenModal}
@@ -166,19 +186,19 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                         <tr>
                             <th>Item</th>
                             <th>Price ($)</th>
-                            <th>Quantity</th>
+                            <th>Date Added</th>
                             <th>Views</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {items.map((item, i) => (
-                            <tr variant="light" key={i} id={item.id}>
-                                    <td>{item.itemName}</td>
-                                    <td>{item.itemCost}</td>
-                                    <td>{item.itemCount}</td>
-                                    <td>{"     "}{item.itemViewCount}</td>
-                                    <td><Button variant="primary" id={item.id} onClick={() => dispatch(buyItem(item.id, items, ws))}> Buy Item Now</Button></td>
+                            <tr variant="light" key={i} id={item._id}>
+                                    <td>{item.itemDetails.itemName}</td>
+                                    <td>{item.itemDetails.itemPrice}</td>
+                                    <td>{item.itemDetails.itemDate}</td>
+                                    <td>{"     "}</td>
+                                    <td><Button variant="primary" id={item._id} onClick={() => dispatch(buyItem(item._id, items, ws))}> Buy Item Now</Button></td>
                             </tr>))}
                     </tbody>
                 </Table>

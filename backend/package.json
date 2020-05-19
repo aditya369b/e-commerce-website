@@ -14,6 +14,7 @@
     "express": "^4.17.1",
     "http-proxy": "^1.18.0",
     "kafka-node": "^5.0.0",
+    "md5": "^2.2.1",
     "mongodb": "^3.5.7",
     "nodemailer": "^6.4.6",
     "pm2": "^4.4.0",
