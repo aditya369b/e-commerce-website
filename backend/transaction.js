@@ -35,9 +35,12 @@ app.post('/api/transaction', (req,res) => {
     let username = req.body.username;
     let items = req.body.itemId;
     let price = req.body.price;
+    let params = {};
   
     let date = new Date();
     // let transactionId = _id;
+    params.price = price;
+    params.date = date;
 
     let result = {}
         // records the transaction
@@ -49,6 +52,7 @@ app.post('/api/transaction', (req,res) => {
           purchaseDate: date,
         })
         .then((doc) => {
+          params.transactionId = doc._id;
           result["transaction"] = {valid: true, result: doc,};
         })
         .catch((e) => {
@@ -67,6 +71,8 @@ app.post('/api/transaction', (req,res) => {
           }
         )
         .then((doc) => {
+          // params.user = doc.firstName;
+          // params.email = doc.email;
           console.log(doc);
           result["buyer"] = { valid: doc };
         })
@@ -86,6 +92,7 @@ app.post('/api/transaction', (req,res) => {
           }
         )
         .then((doc) => {
+          params.item = itemName;
           console.log(doc);
           result["transaction"] = { valid: doc };
         })
@@ -95,7 +102,7 @@ app.post('/api/transaction', (req,res) => {
         });
 
     console.log('Pushing new item to queue');
-    producer.send(req.body);
+    producer.send(params);
     res.send(result);
 });
 });
