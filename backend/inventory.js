@@ -152,9 +152,20 @@ client.connect((err) => {
     let user = req.body.username;
     db.collection('TransCollection').find({buyer : user}).toArray(function(err, result) {
       if (err) res.send(err);
+      let response = {}
+      
+      for(let i = 0; i< result.length; i++){
+        let resultObj = result[i];
+        console.log(resultObj);
+        let purchaseDate = resultObj.purchaseDate
+          if (response.hasOwnProperty(purchaseDate))
+              response[purchaseDate].push(resultObj.items);
+          else
+          response[purchaseDate] = [resultObj.items];
+      }
+      console.log(response);
 
-      console.log(result);
-      res.send({result : result});
+      res.send({result : response});
     });
   });
 

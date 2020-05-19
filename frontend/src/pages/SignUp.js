@@ -20,28 +20,31 @@ const cookies = new Cookies();
 const Signup = ({ username, password, address, email_address, isNewUser, isError, dispatch }) => {
 
   const [showHomePage, setToHomePage] = React.useState(false);
+  const [name,setName] = React.useState('');
+  const [userType,setuserType] = React.useState('buyer');
 
+  const SignupUser = () => {
 
-  const SignupUser = () => (dispatch, getState) => {
+    // console.log(getState().userReducer.password);
+    // console.log(getState().userReducer.username);   
 
-    console.log(getState().userReducer.password)
-    console.log(getState().userReducer.username)
     dispatch(setIsError(false))
     cookies.remove('username');
     cookies.remove('loggedin');
-    const body = {
-
-      "username": username,
+    console.log("Name: " + name + " type: " + userType);
+    let body = {
+      "name" : name,
+      "userId": username,
       "password": md5(password),
-      "contact-address": address,
-      "email-address": email_address,
+      "userType": userType,
+      "email": email_address,
 
     };
     console.log("Creating user-profile")
     axios
-      .post("/api/auth/create", body)
+      .post("/api/auth/signup", body)
       .then((res) => {
-        if (res.data) {
+        if (res.data.valid) {
           cookies.set('username', username, { path: '/' });
           cookies.set('loggedin', 'true', { path: '/' });
           console.log("User-Credentials Authenticated");
@@ -71,6 +74,12 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
           <form>
             <h1>Sign Up</h1>
             <div class="field">
+            <p>Name</p>
+              <input
+                name="name"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+              ></input>
               <p>Username</p>
               <input
                 name="username"
@@ -103,7 +112,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
               ></input>
             </div>
 
-            <Button class="signupbtn" variant="outline-success" onClick={() => SignupUser}>
+            <Button class="signupbtn" variant="outline-success" onClick={() => SignupUser()}>
               {" "}
           Signup{" "}
             </Button>

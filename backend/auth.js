@@ -60,9 +60,11 @@ client.connect((err) => {
 
     db.collection("UserCollection")
       .insert({
+        name : req.body.name,
         userId: req.body.userId,
         password: req.body.password,
         userType: req.body.userType,
+        email: req.body.email,
         items: [],
       })
       .then((doc) => {
