@@ -6,8 +6,9 @@ const INITIAL_STATE = {
     itemDescription: '',
     itemsAdded: '',
     getItems: [],
-    editItems:'',
-    deleteItems: ''
+    editItems: true,
+    changeItem: '',
+    forSale: true
 }
 
 const sellerReducer = (state= INITIAL_STATE, action) => {
@@ -39,7 +40,7 @@ const sellerReducer = (state= INITIAL_STATE, action) => {
         case 'SET_ITEMS_ADDED':
             return{
                 ...state,
-                itemsAdded: action.payload.status
+                itemsAdded: action.payload.Status
             }
 
         case 'GET_ITEMS':
@@ -48,6 +49,30 @@ const sellerReducer = (state= INITIAL_STATE, action) => {
                 getItems: action.payload.items
             }
 
+        case 'EDIT_ITEMS':
+            return{
+                ...state,
+                editItems: true
+            }
+
+        case 'UPDATE_ITEMS':
+            return{
+                ...state,
+                changeItem: action.payload.id,
+                editItems: false
+            }
+
+        case 'SET_FORSALE':
+            return{
+                ...state,
+                forSale: false
+            }
+
+        case 'DELETE_ITEMS':
+            return{
+                ...state,
+                changeItem: action.payload.id
+            }
         default:
             return state
     }

@@ -31,13 +31,14 @@ client.connect((err) => {
   app.post("/api/item/create", (req, res) => {
       // Should check whether itemId exisits in db or not. May do it at front end as well ????
     db.collection("ItemCollection")
-      .insert({
+      .insertOne({
         itemId: req.body.username + "_" + req.body.name, // unique id
         itemDetails: {
           itemName: req.body.name,
           itemPrice: req.body.price,
-          itemDesc: req.body.desc,
+          itemDesc: req.body.description,
           itemDate: req.body.date,
+          itemQuantity: req.body.quantity
          // itemURL: req.body.URL,
         },
         seller: req.body.username,
@@ -45,10 +46,10 @@ client.connect((err) => {
         forSale: true,
       })
       .then((doc) => {
-        console.log(doc);
+        console.log(doc.ops);
         res.send({
           valid: true,
-          result: doc,
+          result: doc.ops,
         });
       })
       .catch((e) => {
@@ -66,8 +67,8 @@ client.connect((err) => {
         }
       )
       .then((doc) => {
-        console.log(doc);
-        res.send({ valid: doc });
+        console.log(doc.ops);
+        res.send({ valid: doc.ops });
       })
       .catch((e) => {
         console.log(e);
@@ -76,13 +77,14 @@ client.connect((err) => {
   });
 
   app.post("/api/item/delete", (req, res) => {
+    console.log(req.body)
     db.collection("ItemCollection")
       .findOneAndUpdate(
         {
-          itemId: req.body.username + "_" + req.body.itemName,
+          itemId: req.body.itemId
         },
         {
-          $set: { forSale: false },
+          $set: { forSale : false },
         }
       )
       .then((doc) => {
@@ -94,21 +96,25 @@ client.connect((err) => {
         res.send("Error ", e);
       });
   });
-
+    
   app.post("/api/item/edit", (req, res) => {
+    console.log("IN UPDATE")
     db.collection("ItemCollection")
       .findOneAndUpdate(
         {
-          itemName: req.body.itemId,
+          itemId: req.body.itemId
         },
         {
-          //   $set: { itemName: false, itemPrice: 99, itemDesc },
-          $set: req.body.params,
+          $set: { itemDetails: {itemPrice: req.body.price, itemQuantity: req.body.quantity, itemDesc: req.body.description, itemDate: req.body.date}}
+          //$set: req.body.params,
         }
       )
       .then((doc) => {
-        console.log(doc);
-        res.send({ valid: doc });
+        console.log(doc.ops);
+        res.send({
+          valid: true,
+          result: doc.ops,
+        });
       })
       .catch((e) => {
         console.log(e);
@@ -142,7 +148,7 @@ client.connect((err) => {
         });
   });
 
-  app.get("/api/item/getItems", (req, res)=>{
+  app.get("/api/item/getAllItems", (req, res)=>{
     console.log("inside getitems")
     const rows = db.collection('ItemCollection').find().toArray(function(err, result) {
         if (err) throw err;

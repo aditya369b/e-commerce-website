@@ -1,4 +1,5 @@
 import axios from "axios";
+import { store } from '../../index';
 
 export const setItemName = itemName => {
     return {
@@ -45,7 +46,7 @@ export const setItemsAdded = (status) => {
     }
 }
 
-export const setGetitems = (data) => {
+export const setGetItems = (data) => {
     return{
         type:'GET_ITEMS',
         payload: {
@@ -54,23 +55,52 @@ export const setGetitems = (data) => {
     }
 }
 
-export const addItem = (dispatch, getState) => {
-    console.log(getState())
+export const setUpdateItems = (id) => {
+    return{
+        type: 'UPDATE_ITEMS',
+        payload: {
+            id: id
+        }
+    }
+}
+
+export const setEditItems = () => {
+    return{
+        type: 'EDIT_ITEMS',
+    }
+}
+
+export const setForSale = () => {
+    return{
+        type: 'SET_FORSALE',
+    }
+}
+
+export const setDeleteItem = (id) => {
+    return{
+        type: 'DELETE_ITEMS',
+        payload: {
+            id: id
+        }
+    }
+}
+export const addItem = () => (dispatch, getState) => {
+    console.log(store.getState())
     console.log("IN ADD ITEMS")
     const todaysdate = new Date()
     const data= {
         username: 'sanjay',
-        name: getState().sellerReducer.itemName,
-        price: getState().sellerReducer.itemPrice,
-        quantity: getState().sellerReducer.itemQuantity,
-        description: getState().sellerReducer.itemDescription,
+        name: store.getState().sellerReducer.itemName,
+        price: store.getState().sellerReducer.itemPrice,
+        quantity: store.getState().sellerReducer.itemQuantity,
+        description: store.getState().sellerReducer.itemDescription,
         date: todaysdate.toLocaleString()
     }
     axios.post("/api/item/create", data)
     .then(res =>{
         if(res.data.valid){
             dispatch(setItemsAdded('true'))
-            console.log(getState())
+            console.log(store.getState())
         }
         else{
             dispatch(setItemsAdded('false'))
@@ -80,3 +110,46 @@ export const addItem = (dispatch, getState) => {
 }
 
 
+export const updateItem = () => (dispatch, getState) => {
+    console.log("IN UPDATE ITEMS")
+    const todaysdate = new Date()
+    const data= {
+        username: 'sanjay',
+        itemId: store.getState().sellerReducer.changeItem,
+        price: store.getState().sellerReducer.itemPrice,
+        quantity: store.getState().sellerReducer.itemQuantity,
+        description: store.getState().sellerReducer.itemDescription,
+        date: todaysdate.toLocaleString()
+    }
+    console.log(data)
+    axios.post("/api/item/edit", data)
+    .then(res => {
+        if(res.data.valid){
+            console.log(res.data.valid)
+            dispatch(setUpdateItems(''))
+            dispatch(setEditItems())
+            console.log(getState())
+        }
+        
+    })
+    .catch(err => console.log(err))
+}
+
+export const deleteItem = () => (dispatch, getState) => {
+    console.log("IN DELETE ITEMS")
+    const data = {
+        itemId: getState().sellerReducer.changeItem
+    }
+    console.log(data)
+    axios.post("/api/item/delete", data)
+    .then(res =>{
+        if(res.data.valid){
+            console.log(res.data.valid)
+            dispatch(setUpdateItems(''))
+            dispatch(setEditItems())
+            console.log(getState())
+        }
+        
+    })
+    .catch(err => console.log(err))
+}

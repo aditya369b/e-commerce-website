@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect} from 'react'
+import { connect } from 'react-redux'
 import axios from 'axios'
 import {Button} from 'react-bootstrap'
-import { setGetitems } from '../../redux/actions/sellerActions';
+import * as actions from '../../redux/actions/sellerActions';
 import { useSelector, useDispatch } from 'react-redux'
-const ShowItemsDashboard = () => {
+import {Input, TextArea} from 'semantic-ui-react'
 
-   // const dispatch = useDispatch()
+const ShowItemsDashboard = (props) => {
+
+    const dispatch = useDispatch()
     const [_data, set_data] = React.useState([]);
     useEffect(() => {
-        const url = '/api/item/getItems';
+        const url = '/api/item/getAllItems';
 
         axios.get(url)
             .then(res => {
             console.log(res.data);
-            //dispatch(setGetitems(res.data))
+            dispatch(actions.setGetItems(res.data))
             set_data(res.data)
             })
             .catch((e) => console.log(e));
@@ -21,27 +24,47 @@ const ShowItemsDashboard = () => {
         console.log(_data)
     },[])
 
+
     return(
             <div>
               <br/> <br/>
-              <div class="row mx-md-n5">
-                        { _data && _data.map((items) => (
-                            <div class = "col px-md-3">
-                                <div class="p-3 border rounded text-center" className='item_box' key={items._id}>
-                                <p>Item Name: {items.name}</p> 
-                                <p>Price: {items.price}</p>
-                                <p>Description: {items.description}</p>
-                                <p>Quantity: {items.quantity}</p>
-                                <Button>Edit</Button> <br/> <br/>
-                                <Button variant="danger"> Delete </Button>
+              { props.getItems && props.getItems.map((items) => (
+                <div className="row mx-md-n5"  key={items.itemId}>
+                            <div className = "col px-md-3">
+                                { items.forSale && 
+                                    <div className="p-3 border rounded text-center" >
+                                        <p>Item Name: {items.itemDetails.itemName}</p> 
+                                        {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Item Price"  onChange= {e => dispatch(actions.setItemPrice(e.target.value))}/> </div> : <p>Price: {items.itemDetails.itemPrice}</p>}
+                                        {props.updateItems===items.itemId ? <div> <br/> <Input type= 'text' label="Items Description" onChange= {e => dispatch(actions.setItemDescription(e.target.value))} /> </div> : <p>Description: {items.itemDetails.itemDesc}</p>}
+                                        {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Items Quantity" onChange= {e => dispatch(actions.setItemQuantity(e.target.value))}/> </div> :<p>Quantity: {items.itemDetails.itemQuantity}</p>}
+                                    
+                                        { props.editItems && <div> <Button onClick = {() => dispatch(actions.setUpdateItems(items.itemId))}> Edit </Button><br/><br/> </div>} 
+                                
+                                        { (props.updateItems===items.itemId && props.editItems === false) && <div> <br/> <Button onClick = {() => dispatch(actions.updateItem())}> Update </Button><br/><br/> </div>} 
+                                                                            
+                                        <Button variant="danger" onClick = {() => { dispatch(actions.setDeleteItem(items.itemId)); dispatch(actions.deleteItem()) }}> Delete </Button>
+                                    </div>
+                                }
                             </div>
-                        </div>
-                        ))
+                        
                         }
                 </div>
+                ))}
+
             </div>
         )
 }
-        
-export default ShowItemsDashboard; 
+
+const mapStateToProps = (state) => ({
+    
+    itemName: state.sellerReducer.itemName,
+    itemPrice: state.sellerReducer.itemPrice,
+    itemQuantity: state.sellerReducer.itemQuantity,
+    itemDescription: state.sellerReducer.itemDescription,
+    editItems: state.sellerReducer.editItems,
+    updateItems:state.sellerReducer.changeItem,
+    getItems: state.sellerReducer.getItems
+})
+
+export default connect (mapStateToProps)(ShowItemsDashboard); 
 
