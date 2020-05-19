@@ -12,6 +12,7 @@ import {
 import thunk from 'redux-thunk';
 import { setItemViewCount } from './redux/actions/itemsActions';
 import { insertMessage } from './redux/actions/homePageActions';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ws = new WebSocket('ws://localhost:3002')
 const store = createStore(rootReducer, applyMiddleware(thunk));
