@@ -11,9 +11,15 @@ import {
     setIsLoggedIn,
     LogOutUser,
 } from "../redux/actions/userActions";
+import {setItems, } from "../redux/actions/itemsActions";
+
 import Cookies from 'universal-cookie';
 import { buyItem } from "../redux/actions/itemsActions";
+import {Button, Nav, Table} from 'react-bootstrap';
+import '../stylesheets/HomePage.css'
+
 const cookies = new Cookies();
+
 
 const customStyles = {
     content: {
@@ -26,11 +32,9 @@ const customStyles = {
     }
 };
 
-const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) => {
+const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws, dispatch }) => {
 
     Modal.setAppElement('#root');
-    
-
     React.useEffect(() => {
         let cookie_uname = cookies.get('username', { path: '/' });
         let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
@@ -47,7 +51,16 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
     const [showPurchaseHistory, setShowPurchaseHistory] = React.useState(false);
     const [createNewUser, setCreateNewUser] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
+
+    axios.get('/api/item/getAllItems')
+        .then(res => {
+            dispatch(setItems(res.data.result));
+            // console.log(res.data);
+        })
+        .catch(console.log);
+
     function openModal() {
+        setShowPurchaseHistory(false);
         if (isLoggedIn) {
             dispatch(LogOutUser())
         }
@@ -71,15 +84,16 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
         console.log(username)
         const body = {
 
-            "username": username,
+            "userId": username,
             "password": md5(password)
         };
         console.log("Making a Call to Server")
         dispatch(setIsError(false))
         axios
-            .post("/api/auth/authenticate", body)
+            .post("/api/auth/login", body)
             .then((res) => {
-                if (res.data) {
+                if (res.data.valid) {
+                    console.log(res.data);
                     cookies.set('username', username, { path: '/' });
                     cookies.set('loggedin', 'true', { path: '/' });
                     dispatch(setIsError(false));
@@ -96,22 +110,30 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
             .catch(console.log());
     };
 
-   
+    function openPurchaseHistory(){
+        return (<Redirect to="/purchase-history/" />);
+    }
+
     if (createNewUser) return <Redirect to="/signup/" />;
-    else if (showPurchaseHistory) return <Redirect to="/purchase-history/" />;
+    else if (showPurchaseHistory) {
+        if(isLoggedIn)
+            return (<Redirect to="/purchase-history/" />);
+        else
+            openModal();
+        }
 
     else
         return (
-            <div className="App">
+            <div className="homepage">
                 <div>
-                    <h2> Welcome to Shoppers Paradise {username}</h2>
+                    <h1 class="title">Welcome to Shoppers Paradise </h1>
                     <Modal
                         isOpen={modalIsOpen}
                         onAfterOpen={afterOpenModal}
                         onRequestClose={closeModal}
                         style={customStyles}
                         contentLabel="login-modal-form">
-                        <button onClick={closeModal}>close</button>
+                        <Button variant="outline-dark" onClick={closeModal}>close</Button>
                         <div>
                             {isError && <h4> Check Credentials Again </h4>}
                             <form>
@@ -132,23 +154,54 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, dispatch }) 
                                         onChange={(e) => dispatch(setPassword(e.target.value))}>
                                     </input>
                                 </div>
-                                <button onClick={() => LoginUser()} type="button"> Login </button>
-                                <button type="button" onClick={() => setCreateNewUser(true)}> Create Profile </button>
+                                <div>
+                                <Button variant="outline-success" onClick={() => LoginUser()}> Login </Button>
+                                <Button variant="outline-primary" onClick={() => setCreateNewUser(true)}> Create Profile </Button>  
+                                </div>
                             </form>
                         </div>
                     </Modal>
                 </div>
+
+                <div class="nav">
+                    <Nav variant="tabs" defaultActiveKey="/">
+                        <Nav.Item>
+                            <Nav.Link href="/">Home</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick={() => setShowPurchaseHistory(true)}> Purchase History </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </div>
+
                 <div>
-                    <button onClick={() => setShowPurchaseHistory(true)}> Purchase History </button>
-                    <button onClick={openModal}> {isLoggedIn ? "Logout" : "Login"} </button>
+                    <marquee behavior="scroll" direction="left">{messages.slice(messages.length- 10)}</marquee>
                 </div>
                 <div>
-                    <marquee behavior="scroll" direction="left">Here is some scrolling text... right to left!</marquee>
-                </div>
-                <div>
-                    <ol>
-                        {items.map((item, i) => (< li key={i} id={item.id} > {item.itemName} {item.itemCost} {item.itemCount} <button id={item.id} onClick={() => dispatch(buyItem(item.id, items))}> Buy Item Now</button> </li>))}
-                    </ol >
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price ($)</th>
+                            <th>Date Added</th>
+                            <th>Views</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((item, i) => (
+                            <tr variant="light" key={i} id={item._id}>
+                                    <td>{item.itemDetails.itemName}</td>
+                                    <td>{item.itemDetails.itemPrice}</td>
+                                    <td>{item.itemDetails.itemDate}</td>
+                                    <td>{"     "}</td>
+                                    <td><Button variant="primary" id={item._id} onClick={() => dispatch(buyItem(item._id, items, ws))}> Buy Item Now</Button></td>
+                            </tr>))}
+                    </tbody>
+                </Table>
                 </div>
             </div>
         );
@@ -161,7 +214,8 @@ const mapStateToProps = (state) => {
         password: state.userReducer.password,
         isLoggedIn: state.userReducer.isLoggedIn,
         isError: state.userReducer.isError,
-        items: state.itemsReducer.items
+        items: state.itemsReducer.items,
+        messages: state.homePageReducer.messages,
     };
 };
 

@@ -1,24 +1,29 @@
 import React from "react";
+import { connect } from "react-redux";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import '../stylesheets/Purchases.css' //temporary css update
+import { Button, ListGroup} from "react-bootstrap";
+import Cookies from 'universal-cookie';
+import '../stylesheets/Purchases.css'
 
+const cookies = new Cookies();
 
-const Purchases = () => {
+const Purchases = ({ username, isLoggedIn, isError, dispatch }) => {
     const [loading, setLoading] = React.useState(false);
 
     const [showHomePage, setToHomePage] = React.useState(false);
 
     const [purchases, setPurchases] = React.useState(
-        { date1: ["item1", "item2"], date2: ["itemA", "itemB", "itemC"], date3: ["item99"], date4: ["someitem"] }
+        // { date1: ["item1", "item2"], date2: ["itemA", "itemB", "itemC"], date3: ["item99"], date4: ["someitem"] }
+        {}
     ); //dumby object for now, change to null when properly plugged into database
 
     //Get the User's Items from Database
-    axios.get('/api/inventory/getItem') //This need to be connected to real url for getting the items
+    axios.post('/api/item/purchaseHistory',{"username" : username}) //This need to be connected to real url for getting the items
         .then(res => {
             setLoading(false);
-            setPurchases(res.data);
+            setPurchases(res.data.result);  
+            // console.log(res.data);
         })
         .catch(console.log);
 
@@ -26,13 +31,17 @@ const Purchases = () => {
     //Create list of purchases by date
     const dateList = Object.keys(purchases).map(dates => {
         return (
-            <div class="date" value={dates}>
-                {dates}
-                <div class="items">{Object.keys(purchases[dates]).map(item => {
+            <div class="dates">
+            <ListGroup value={dates}>
+                <h4>{dates}</h4>
+                <div class="items">
+                {Object.keys(purchases[dates]).map(item => {
                     return (
-                        <div class="item">{purchases[dates][item]}</div>
+                        <ListGroup.Item>{purchases[dates][item]}</ListGroup.Item>
                     );
-                })}</div>
+                })}
+                </div>
+            </ListGroup>
             </div>
         );
     });
@@ -44,15 +53,25 @@ const Purchases = () => {
     else
         //Component Returned
         return (
-            <div>
-                <Button onClick={() => { setToHomePage(true) }}>Back</Button>
-                <div class="purchaseComponent">
+            <div class="purchaseComponent">
+                <Button variant="outline-primary" onClick={() => { setToHomePage(true) }}>Back</Button>
                     <h2 class="title">Your Purchase History</h2>
-                    {loading === true && <h4>Loading Purchase History...</h4>}
-                    {dateList}
-                </div>
+                    <div class="contents">
+                        {loading === true && <h4>Loading Purchase History...</h4>}
+                        {dateList}
+                    </div>
             </div>
         );
 };
 
-export default Purchases;
+const mapStateToProps = (state) => {
+
+    return {
+        username: state.userReducer.username,
+        isLoggedIn: state.userReducer.isLoggedIn,
+        isError: state.userReducer.isError,
+    };
+};
+
+export default connect(mapStateToProps)(Purchases);
+// export default Purchases;
