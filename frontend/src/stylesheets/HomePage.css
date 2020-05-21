@@ -3,7 +3,9 @@
 }
 .title {
     padding: 5px 0;
-    text-align: left;
+    /* text-align: left; */
+    display: flex;
+    justify-content: center;
 }
 .nav {
     margin-top: 5px;
