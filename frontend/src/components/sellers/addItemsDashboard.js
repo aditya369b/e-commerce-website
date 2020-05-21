@@ -1,9 +1,42 @@
-import React, {  useState } from 'react';
+import React from 'react';
 import * as actions from '../../redux/actions/sellerActions';
 import { connect } from 'react-redux';
-import { Input,TextArea,Form,Button } from 'semantic-ui-react'
+import { Input,Form,Button } from 'semantic-ui-react'
+import {useDispatch} from 'react-redux'
+import axios from 'axios';
+import {setItemsAdded, } from '../../redux/actions/sellerActions';
 
-const AddItemsDashboard = (props,dispatch) => {
+const AddItemsDashboard = (props) => {
+  const dispatch = useDispatch()
+
+  const addItem = () => {
+    console.log("IN ADD ITEMS")
+    const todaysdate = new Date()
+    const data= {
+        username: 'sanjay',
+        name: props.itemName,
+        price: props.itemPrice,
+        quantity: props.itemQuantity,
+        description: props.itemDescription,
+        date: todaysdate.toLocaleString()
+    }
+    axios.post("/api/item/create", data)
+    .then(res =>{
+        if(res.data.valid){
+            dispatch(setItemsAdded('true'))
+            // props.setItemsAdded('true');
+        }
+        else{
+          // props.setItemsAdded('false');
+            dispatch(setItemsAdded('false'))
+        }
+    })
+    .catch(err => console.log(err))
+}
+
+
+
+
       return (
         <Form>
           <div>
@@ -11,17 +44,17 @@ const AddItemsDashboard = (props,dispatch) => {
               <Input label= "Item Name" type='text' placeholder="item Name" value={props.itemName} onChange={e => props.setItemName(e.target.value)}/>
             </div>
             <div> <br/>
-              <Input label= "Item Price" type='text' placeholder="item Price" value={props.itemPrice} onChange={e => props.setItemPrice(e.target.value)}/>
+              <Input label= "Item Price" type='number' placeholder="item Price" value={props.itemPrice} onChange={e => props.setItemPrice(e.target.value)}/>
             </div>
             <div> <br/>
-              <Input label= "Item Quantity" type='text' placeholder="item Quantity" value={props.itemQuantity} onChange={e => props.setItemQuantity(e.target.value)}/>
+              <Input label= "Item Quantity" type='number' placeholder="item Quantity" value={props.itemQuantity} onChange={e => props.setItemQuantity(e.target.value)}/>
             </div>
             <div> <br/>
               <Input label= "Item Description" type='text' placeholder="item Description" value={props.itemDescription} onChange={e => props.setItemDescription(e.target.value)}/>
             </div><br/>
-              <Button positive onClick= {() => dispatch(actions.addItem())}>Add Item</Button>
-            <div>
-                <h3>{props.itemsAdded === 'true' ? "Items added to the inventory" : props.itemsAdded=== 'false' ? "Please try again" : props.itemsAdded}</h3>
+              <Button positive onClick= {() => addItem() /* dispatch(actions.addItem()) */}>Add Item</Button>
+            <div><br/>
+                <h3>{props.itemsAdded === 'true' ? "Items added to the inventory" : props.itemsAdded === 'false' ? "Please try again" : props.itemsAdded}</h3>
             </div>
           </div>
         </Form>
@@ -44,7 +77,7 @@ const mapDispatchToProps = (dispatch) => ({
     setItemName: (name) => dispatch(actions.setItemName(name)),
     setItemPrice: (price) => dispatch(actions.setItemPrice(price)),
     setItemQuantity: (quantity) => dispatch(actions.setItemQuantity(quantity)),
-    setItemDescription: (description) => dispatch(actions.setItemDescription(description)),
+    setItemDescription: (description) => dispatch(actions.setItemDescription(description))
 })
 
 export default connect (mapStateToProps, mapDispatchToProps)(AddItemsDashboard)
