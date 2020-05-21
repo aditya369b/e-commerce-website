@@ -5,7 +5,7 @@ const port = 3004;
 /** Database */
 const { MongoClient, ObjectID } = require("mongodb");
 const url = "mongodb://localhost:27017";
-const dbName = "MochaDatabase";
+const dbName = "Mocha";
 const client = new MongoClient(url);
 
 app.use(express.json()); // this is a middleware
@@ -30,6 +30,30 @@ client.connect((err) => {
 
   app.post("/api/item/create", (req, res) => {
       // Should check whether itemId exisits in db or not. May do it at front end as well ????
+      let exists = false;
+      db.collection("ItemCollection")
+      .findOne(
+        {
+          itemId: req.body.username + "_" + req.body.name,
+        })
+      .then((doc) => {
+        console.log(doc);
+        if(doc && doc.itemId){
+          exists = true;
+          console.log(exists);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        res.send("Error ", e);
+      });
+
+  if(exists){
+      res.send({
+        valid: false
+      });
+    }
+  else{
     db.collection("ItemCollection")
       .insertOne({
         itemId: req.body.username + "_" + req.body.name, // unique id
@@ -47,10 +71,10 @@ client.connect((err) => {
       })
       .then((doc) => {
         console.log(doc.ops);
-        res.send({
-          valid: true,
-          result: doc.ops,
-        });
+        // res.send({
+        //   valid: true,
+        //   result: doc.ops,
+        // });
       })
       .catch((e) => {
         console.log(e);
@@ -63,17 +87,21 @@ client.connect((err) => {
           userId: req.body.username,
         },
         {
-          $push: { items: req.body.username + "_" + req.body.itemName },
+          $push: { items: req.body.username + "_" + req.body.name },
         }
       )
       .then((doc) => {
         console.log(doc.ops);
-        res.send({ valid: doc.ops });
+        res.send({
+            valid: true,
+            result: doc.ops,
+          });
       })
       .catch((e) => {
         console.log(e);
         res.send("Error ", e);
       });
+    }
   });
 
   app.post("/api/item/delete", (req, res) => {

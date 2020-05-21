@@ -5,6 +5,7 @@ import {Button} from 'react-bootstrap'
 import * as actions from '../../redux/actions/sellerActions';
 import { useSelector, useDispatch } from 'react-redux'
 import {Input, TextArea} from 'semantic-ui-react'
+import {setEditItems, setUpdateItems, } from '../../redux/actions/sellerActions';
 
 const ShowItemsDashboard = (props) => {
 
@@ -24,6 +25,46 @@ const ShowItemsDashboard = (props) => {
         console.log(_data)
     },[])
 
+const updateData = () => {
+    const url = '/api/item/getAllItems';
+
+    axios.get(url)
+        .then(res => {
+        console.log(res.data);
+        dispatch(actions.setGetItems(res.data))
+        set_data(res.data)
+        })
+        .catch((e) => console.log(e));
+    
+    console.log(_data)
+}
+
+const updateItem = (item_id) => {
+    console.log("IN UPDATE ITEMS")
+    const todaysdate = new Date()
+    const data= {
+        username: 'sanjay',
+        itemId: item_id,
+        price: props.itemPrice,
+        quantity: props.itemQuantity,
+        description: props.itemDescription,
+        date: todaysdate.toLocaleString()
+    }
+    console.log(data)
+    axios.post("/api/item/edit", data)
+    .then(res => {
+        if(res.data.valid){
+            console.log(res.data.valid)
+            dispatch(setUpdateItems(''))
+            dispatch(setEditItems())
+            
+        }
+        
+    })
+    .catch(err => console.log(err))
+}
+
+
 
     return(
             <div>
@@ -38,11 +79,11 @@ const ShowItemsDashboard = (props) => {
                                         {props.updateItems===items.itemId ? <div> <br/> <Input type= 'text' label="Items Description" onChange= {e => dispatch(actions.setItemDescription(e.target.value))} /> </div> : <p>Description: {items.itemDetails.itemDesc}</p>}
                                         {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Items Quantity" onChange= {e => dispatch(actions.setItemQuantity(e.target.value))}/> </div> :<p>Quantity: {items.itemDetails.itemQuantity}</p>}
                                     
-                                        { props.editItems && <div> <Button onClick = {() => dispatch(actions.setUpdateItems(items.itemId))}> Edit </Button><br/><br/> </div>} 
+                                        { props.editItems && <div> <Button onClick = {() => {dispatch(actions.setUpdateItems(items.itemId))}}> Edit </Button><br/><br/> </div>} 
                                 
-                                        { (props.updateItems===items.itemId && props.editItems === false) && <div> <br/> <Button onClick = {() => dispatch(actions.updateItem())}> Update </Button><br/><br/> </div>} 
+                                        { (props.updateItems===items.itemId && props.editItems === false) && <div> <br/> <Button onClick = {() => {/*dispatch(actions.updateItem());*/ updateItem(items.itemId); updateData();} }> Update </Button><br/><br/> </div>} 
                                                                             
-                                        <Button variant="danger" onClick = {() => { dispatch(actions.setDeleteItem(items.itemId)); dispatch(actions.deleteItem()) }}> Delete </Button>
+                                        <Button variant="danger" onClick = {() => { dispatch(actions.setDeleteItem(items.itemId)); dispatch(actions.deleteItem()); updateData() }}> Delete </Button>
                                     </div>
                                 }
                             </div>
