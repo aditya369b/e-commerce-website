@@ -7,7 +7,8 @@ const KafkaProducer = require('./Kafka/KafkaProducer.js');
 const producer = new KafkaProducer('myTopic');
 
 const { MongoClient, ObjectID } = require("mongodb");
-const url = "mongodb://localhost:27017";
+const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
+
 const dbName = "Mocha";
 const client = new MongoClient(url);
 
