@@ -40,8 +40,8 @@ client.connect((err) => {
 
 
         /** Creates items in db */
-    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date(), itemURL: ""};
-    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date(), itemURL: ""};
+    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemQuantity : 10, itemDesc: "A reader", itemDate: new Date().toLocaleString()};
+    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemQuantity : 5, itemDesc: "A book", itemDate: new Date().toLocaleString()};
 
     defaultItems = [
         {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", salesCount: 0, forSale : true},
@@ -56,7 +56,7 @@ client.connect((err) => {
         });
 
     defaultTransaction = [
-        {items: "test_seller_book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date()},
+        {items: "test_seller_book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date().toLocaleString()},
     ]
         
     db.collection("TransCollection")
