@@ -57,31 +57,36 @@ client.connect((err) => {
             valid: false,
             cause: "User Already exists",
           });
+      else{
+
+        db.collection("UserCollection")
+        .insert({
+          name : req.body.name,
+          userId: req.body.userId,
+          password: req.body.password,
+          userType: req.body.userType,
+          email: req.body.email,
+          items: [],
+        })
+        .then((doc) => {
+          res.send({
+            valid: true,
+            cause: "User signed up!",
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+          res.send("Error", e);
+        });
+        
+      }
       })
       .catch((e) => {
         console.log(e);
         res.send("Error", e);
       });
 
-    db.collection("UserCollection")
-      .insert({
-        name : req.body.name,
-        userId: req.body.userId,
-        password: req.body.password,
-        userType: req.body.userType,
-        email: req.body.email,
-        items: [],
-      })
-      .then((doc) => {
-        res.send({
-          valid: true,
-          cause: "User signed up!",
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-        res.send("Error", e);
-      });
+
   });
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));

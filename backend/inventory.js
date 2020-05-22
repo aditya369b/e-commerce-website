@@ -47,67 +47,71 @@ client.connect((err) => {
           exists = true;
           console.log(exists);
         }
-      })
-      .catch((e) => {
-        console.log(e);
-        res.send("Error ", e);
-      });
 
-  if(exists){
-      res.send({
-        valid: false
-      });
-    }
-  else{
-    db.collection("ItemCollection")
-      .insertOne({
-        itemId: req.body.username + "_" + req.body.name, // unique id
-        itemDetails: {
-          itemName: req.body.name,
-          itemPrice: req.body.price,
-          itemDesc: req.body.description,
-          itemDate: req.body.date,
-
-          itemQuantity: req.body.quantity
-         // itemURL: req.body.URL,
-        },
-        seller: req.body.username,
-        salesCount: 0,
-        forSale: true,
-      })
-      .then((doc) => {
-        console.log(doc.ops);
-        // res.send({
-        //   valid: true,
-        //   result: doc.ops,
-        // });
-      })
-      .catch((e) => {
-        console.log(e);
-        res.send("Error", e);
-      });
-
-    db.collection("UserCollection")
-      .findOneAndUpdate(
-        {
-          userId: req.body.username,
-        },
-        {
-          $push: { items: req.body.username + "_" + req.body.name },
-        }
-      )
-      .then((doc) => {
-        console.log(doc.ops);
-        res.send({
-            valid: true,
-            result: doc.ops,
+        if(exists){
+          res.send({
+            valid: false
           });
+        }
+      else{
+        db.collection("ItemCollection")
+          .insertOne({
+            itemId: req.body.username + "_" + req.body.name, // unique id
+            itemDetails: {
+              itemName: req.body.name,
+              itemPrice: req.body.price,
+              itemDesc: req.body.description,
+              itemDate: req.body.date,
+    
+              // itemQuantity: parseInt(req.body.quantity)
+             // itemURL: req.body.URL,
+            },
+            seller: req.body.username,
+            quantity: parseInt(req.body.quantity),
+            salesCount: 0,
+            forSale: true,
+          })
+          .then((doc) => {
+            console.log(doc.ops);
+            // res.send({
+            //   valid: true,
+            //   result: doc.ops,
+            // });
+          })
+          .catch((e) => {
+            console.log(e);
+            res.send("Error", e);
+          });
+    
+        db.collection("UserCollection")
+          .findOneAndUpdate(
+            {
+              userId: req.body.username,
+            },
+            {
+              $push: { items: req.body.username + "_" + req.body.name },
+            }
+          )
+          .then((doc) => {
+            console.log(doc.ops);
+            res.send({
+                valid: true,
+                result: doc.ops,
+              });
+          })
+          .catch((e) => {
+            console.log(e);
+            res.send("Error ", e);
+          });
+        }
+    
+
       })
       .catch((e) => {
         console.log(e);
         res.send("Error ", e);
       });
-    }
+
   });
 
   app.post("/api/item/delete", (req, res) => {
@@ -139,8 +143,8 @@ client.connect((err) => {
           itemId: req.body.itemId
         },
         {
-          $set: { itemDetails: {itemName: req.body.name,itemPrice: req.body.price, itemQuantity: req.body.quantity, itemDesc: req.body.description, itemDate: req.body.date}}
-          //$set: req.body.params,
+          $set: { itemDetails: {itemName: req.body.name,itemPrice: req.body.price, itemDesc: req.body.description, itemDate: req.body.date}},
+          $set: {quantity : parseInt(req.body.quantity)},
         }
       )
       .then((doc) => {

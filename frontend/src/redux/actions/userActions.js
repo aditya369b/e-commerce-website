@@ -86,6 +86,7 @@ export const SignupUser = () => (dispatch, getState) => {
 export const LogOutUser = () => (dispatch, getState) => {
     console.log("clearing-cookies");
     cookies.remove('username', { path: '/' });
+    cookies.remove('userType', { path: '/' });
     cookies.remove("loggedin", { path: '/' });
     dispatch(setUsername(""));
     dispatch(setUserType(""));
