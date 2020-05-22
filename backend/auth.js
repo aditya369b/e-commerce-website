@@ -4,7 +4,7 @@ const port = 3001;
 
 /** Database */
 const { MongoClient, ObjectID } = require("mongodb");
-const url = "mongodb://localhost:27017";
+const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
 const dbName = "Mocha";
 const client = new MongoClient(url);
 
@@ -65,7 +65,7 @@ client.connect((err) => {
 
     db.collection("UserCollection")
       .insert({
-        name : req.body.name,
+        name: req.body.name,
         userId: req.body.userId,
         password: req.body.password,
         userType: req.body.userType,

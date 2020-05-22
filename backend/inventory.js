@@ -4,7 +4,7 @@ const port = 3004;
 
 /** Database */
 const { MongoClient, ObjectID } = require("mongodb");
-const url = "mongodb://localhost:27017";
+const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
 const dbName = "Mocha";
 const client = new MongoClient(url);
 
