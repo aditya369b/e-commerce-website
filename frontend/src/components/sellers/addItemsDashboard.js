@@ -13,7 +13,7 @@ const AddItemsDashboard = (props) => {
     console.log("IN ADD ITEMS")
     const todaysdate = new Date()
     const data= {
-        username: 'sanjay',
+        username: props.username,
         name: props.itemName,
         price: props.itemPrice,
         quantity: props.itemQuantity,

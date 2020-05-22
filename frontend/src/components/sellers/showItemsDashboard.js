@@ -12,13 +12,14 @@ const ShowItemsDashboard = (props) => {
     const dispatch = useDispatch()
     const [_data, set_data] = React.useState([]);
     useEffect(() => {
-        const url = '/api/item/getAllItems';
+        const body = {username: props.username};
+        const url = '/api/item/getInfo';
 
-        axios.get(url)
+        axios.post(url,body)
             .then(res => {
             console.log(res.data);
-            dispatch(actions.setGetItems(res.data))
-            set_data(res.data)
+            dispatch(actions.setGetItems(res.data.result));
+            set_data(res.data.result)
             })
             .catch((e) => console.log(e));
         
@@ -26,25 +27,27 @@ const ShowItemsDashboard = (props) => {
     },[])
 
 const updateData = () => {
-    const url = '/api/item/getAllItems';
+    const body = {username: props.username};
+    const url = '/api/item/getInfo';
 
-    axios.get(url)
+    axios.post(url,body)
         .then(res => {
         console.log(res.data);
-        dispatch(actions.setGetItems(res.data))
-        set_data(res.data)
+        dispatch(actions.setGetItems(res.data.result));
+        set_data(res.data.result)
         })
         .catch((e) => console.log(e));
     
     console.log(_data)
 }
 
-const updateItem = (item_id) => {
+const updateItem = (item_id, item_name) => {
     console.log("IN UPDATE ITEMS")
     const todaysdate = new Date()
     const data= {
-        username: 'sanjay',
+        username: props.username,
         itemId: item_id,
+        name: item_name,
         price: props.itemPrice,
         quantity: props.itemQuantity,
         description: props.itemDescription,
@@ -81,7 +84,7 @@ const updateItem = (item_id) => {
                                     
                                         { props.editItems && <div> <Button onClick = {() => {dispatch(actions.setUpdateItems(items.itemId))}}> Edit </Button><br/><br/> </div>} 
                                 
-                                        { (props.updateItems===items.itemId && props.editItems === false) && <div> <br/> <Button onClick = {() => {/*dispatch(actions.updateItem());*/ updateItem(items.itemId); updateData();} }> Update </Button><br/><br/> </div>} 
+                                        { (props.updateItems===items.itemId && props.editItems === false) && <div> <br/> <Button onClick = {() => {/*dispatch(actions.updateItem());*/ updateItem(items.itemId, items.itemDetails.itemName); updateData();} }> Update </Button><br/><br/> </div>} 
                                                                             
                                         <Button variant="danger" onClick = {() => { dispatch(actions.setDeleteItem(items.itemId)); dispatch(actions.deleteItem()); updateData() }}> Delete </Button>
                                     </div>

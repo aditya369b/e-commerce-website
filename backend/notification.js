@@ -15,9 +15,10 @@ client_transaction.on('message', (channel, message) => {
 });
 
 const broadcastMessage = (message) => {
-        wss.clients.forEach((client) => {
+    console.log(JSON.parse(message));    
+    wss.clients.forEach((client) => {
             if(client.readyState === WebSocket.OPEN){
-                client.send(JSON.stringify(message));
+                client.send((message));
             }
         });
     };
@@ -34,11 +35,12 @@ wss.on('connection' , (ws) => {
     
     ws.on('message', (message) => {
         const msgObj = JSON.parse(message);
+        console.log(msgObj);
         ws.id = msgObj.id;
         // client.incr(msgObj.id);
         let itemCount;
 
-        client.incr(msgObj.id, (err, cachedValue) => {
+        client.incr(ws.id, (err, cachedValue) => {
 
             if(err) {
               console.log(err);

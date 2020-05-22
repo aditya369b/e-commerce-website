@@ -7,6 +7,10 @@ export const setUsername = username => ({
     type: 'SET_USERNAME',
     username
 })
+export const setUserType = userType => ({
+    type: 'SET_USER_TYPE',
+    userType
+})
 export const setIsLoggedIn = (isLoggedIn) => ({
     type: 'SET_IS_LOGGED_IN',
     isLoggedIn
@@ -35,7 +39,7 @@ export const setAddress = (address) => ({
 })
 
 export const setEmailAddress = (email_address) => ({
-    type: 'SET_ADDRESS',
+    type: 'SET_EMAIL_ADDRESS',
     email_address
 })
 
@@ -83,6 +87,7 @@ export const LogOutUser = () => (dispatch, getState) => {
     console.log("clearing-cookies");
     cookies.remove('username', { path: '/' });
     cookies.remove("loggedin", { path: '/' });
-    dispatch(setUsername(""))
+    dispatch(setUsername(""));
+    dispatch(setUserType(""));
     dispatch(setIsLoggedIn(false));
 };

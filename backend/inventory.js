@@ -139,7 +139,7 @@ client.connect((err) => {
           itemId: req.body.itemId
         },
         {
-          $set: { itemDetails: {itemPrice: req.body.price, itemQuantity: req.body.quantity, itemDesc: req.body.description, itemDate: req.body.date}}
+          $set: { itemDetails: {itemName: req.body.name,itemPrice: req.body.price, itemQuantity: req.body.quantity, itemDesc: req.body.description, itemDate: req.body.date}}
           //$set: req.body.params,
         }
       )

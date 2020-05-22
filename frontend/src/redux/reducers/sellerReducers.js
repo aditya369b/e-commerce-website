@@ -1,8 +1,8 @@
 
 const INITIAL_STATE = {
     itemName: '',
-    itemPrice: '',
-    itemQuantity: '',
+    itemPrice: 0,
+    itemQuantity: 0,
     itemDescription: '',
     itemsAdded: '',
     getItems: [],

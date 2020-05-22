@@ -143,7 +143,8 @@ export const updateItem = () => (dispatch, getState) => {
 export const deleteItem = () => (dispatch, getState) => {
     console.log("IN DELETE ITEMS")
     const data = {
-        itemId: getState().sellerReducer.changeItem
+        itemId: getState().sellerReducer.changeItem,
+        username: getState().userReducer.username
     }
     console.log(data)
     axios.post("/api/item/delete", data)

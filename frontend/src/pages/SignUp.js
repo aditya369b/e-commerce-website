@@ -8,6 +8,7 @@ import {
   setAddress,
   setEmailAddress,
   setUsername,
+  setUserType,
   setPassword,
   setIsError,
   setIsLoggedIn,
@@ -17,11 +18,11 @@ import "../stylesheets/SignUp.css"
 
 const cookies = new Cookies();
 
-const Signup = ({ username, password, address, email_address, isNewUser, isError, dispatch }) => {
+const Signup = ({ username, userType, password, address, email_address, isNewUser, isError, dispatch }) => {
 
   const [showHomePage, setToHomePage] = React.useState(false);
   const [name,setName] = React.useState('');
-  const [userType,setuserType] = React.useState('buyer');
+  // const [userType,setuserType] = React.useState('buyer');
 
   const SignupUser = () => {
 
@@ -41,6 +42,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
 
     };
     console.log("Creating user-profile")
+    console.log(body);
     axios
       .post("/api/auth/signup", body)
       .then((res) => {
@@ -62,6 +64,8 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
       .catch(console.log());
   };
   if (showHomePage) {
+    if(userType == "seller")
+        return <Redirect to="/seller/" />;
     return <Redirect to="/" />;
   }
   else
@@ -111,6 +115,13 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
                 onChange={(e) => dispatch(setEmailAddress(e.target.value))}
               ></input>
             </div>
+            <div class="field">
+            <p>Please select your user account type:</p>
+              <input type="radio" id="buyer" name="gender" value="buyer" checked={true} onClick={(e) => dispatch(setUserType(e.target.value))}></input>
+              <label for="buyer">Buyer</label><br></br>
+              <input type="radio" id="seller" name="gender" value="seller" onClick={(e) => dispatch(setUserType(e.target.value))}></input>
+              <label for="seller">Seller</label><br></br>
+            </div>
 
             <Button class="signupbtn" variant="outline-success" onClick={() => SignupUser()}>
               {" "}
@@ -124,6 +135,7 @@ const Signup = ({ username, password, address, email_address, isNewUser, isError
 
 const mapStateToProps = (state) => ({
   username: state.userReducer.username,
+  userType: state.userReducer.userType,
   password: state.userReducer.password,
   address: state.userReducer.address,
   email_address: state.userReducer.email_address,

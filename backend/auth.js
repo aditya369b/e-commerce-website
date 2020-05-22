@@ -29,8 +29,13 @@ client.connect((err) => {
       })
       .then((doc) => {
         console.log(doc);
+        let userType = null
+        if(doc !== null)
+          userType = doc.userType;
+
         res.send({
           valid: doc !== null && doc.password === req.body.password,
+          userType : userType,
         });
       })
       .catch((e) => {
