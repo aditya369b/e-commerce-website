@@ -39,12 +39,12 @@ client.connect((err) => {
 
 
         /** Creates items in db */
-    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemQuantity : 10, itemDesc: "A reader", itemDate: new Date().toLocaleString()};
-    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemQuantity : 5, itemDesc: "A book", itemDate: new Date().toLocaleString()};
+    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date().toLocaleString()};
+    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date().toLocaleString()};
 
     defaultItems = [
-        {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", salesCount: 0, forSale : true},
-        {itemId: "test_seller_book", itemDetails: itemDetails2, seller: "test_seller", salesCount: 1, forSale : true},
+        {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", quantity : 10, salesCount: 0, forSale : true},
+        {itemId: "test_seller_book", itemDetails: itemDetails2, seller: "test_seller", quantity : 5, salesCount: 1, forSale : true},
     ]
         
     db.collection("ItemCollection")

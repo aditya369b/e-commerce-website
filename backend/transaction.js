@@ -85,15 +85,22 @@ app.post('/api/transaction', (req,res) => {
             itemId: items,
           },
           {
-            $inc: { salesCount: 1 },
-            // $inc: {itemDetails : {itemQuantity : -1}}
+            $inc: { salesCount: 1, quantity : -1 },
           }
         )
         .then((doc) => {
           console.log("Here:",doc.value);
           params.item = doc.value.itemDetails.itemName;
           result["transaction"] = { valid: doc };
-          console.log("params: ",params.item);      
+          console.log("params: ",params.item);
+          
+          if(doc.value.quantity <= 1)
+          {
+            db.collection("ItemCollection")
+              .findOneAndUpdate({itemId: items,}, { $set : {forSale: false} })
+              .then((doc) => console.log(doc))
+              .catch((e) => console.log(e));
+          }
 
         // client_transaction.subscribe('transactionChannel');
        let messageObj = 

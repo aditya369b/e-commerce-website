@@ -36,21 +36,25 @@ const customStyles = {
 const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws, dispatch }) => {
 
     Modal.setAppElement('#root');
+    const [isSeller, setisSeller] = React.useState(false);
     React.useEffect(() => {
         let cookie_uname = cookies.get('username', { path: '/' });
+        let cookie_utype = cookies.get('userType', { path: '/' });
         let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
         console.log("cookie_uname " + cookie_uname)
         console.log("cookie_loggedin " + cookie_isLoggedIn)
         if (cookie_isLoggedIn != null && cookie_isLoggedIn === 'true') {
             console.log("User-Logged-In")
             dispatch(setUsername(cookie_uname))
+            dispatch(setUserType(cookie_utype))
             dispatch(setIsLoggedIn(cookie_isLoggedIn))
+            if(cookie_utype == "seller")
+                setisSeller(true);
         }
     }, [dispatch]);
 
 
     const [showPurchaseHistory, setShowPurchaseHistory] = React.useState(false);
-    const [isSeller, setisSeller] = React.useState(false);
 
     const [allItems, setAllItems] = React.useState([]);
     const [showItemDesc, setShowItemDesc] = React.useState(false);
@@ -60,6 +64,9 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
 
     const [createNewUser, setCreateNewUser] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [prevMessages, setPrevMessages] = React.useState([]);
+    
+    function getItems(){
 
     axios.get('/api/item/getAllItems')
         .then(res => {
@@ -69,6 +76,16 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
             console.log(res.data);
         })
         .catch(console.log);
+    }
+
+    getItems();
+
+    if(messages.length != prevMessages.length){
+        setPrevMessages(messages);
+        setAllItems([]);
+        getItems();
+    }
+    console.log(prevMessages);
 
     function openModal() {
         setShowPurchaseHistory(false);
@@ -105,6 +122,9 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
             })
             .catch((e) => console.log(e));
         }
+        else{
+            alert("Please login to make a purchase!");
+        }
     }
 
     const LoginUser = () => {
@@ -124,6 +144,8 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                 if (res.data.valid) {
                     console.log(res.data);
                     cookies.set('username', username, { path: '/' });
+                    cookies.set('userType', res.data.userType, { path: '/' });
+                    // let cookie_utype = cookies.get('userType', { path: '/' });
                     cookies.set('loggedin', 'true', { path: '/' });
                     dispatch(setIsError(false));
                     dispatch(setIsLoggedIn(true));
@@ -239,7 +261,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                                     <td>{item.itemDetails.itemName}</td>
                                     <td>{item.itemDetails.itemPrice}</td>
                                     <td>{item.itemDetails.itemDate}</td>
-                                    <td>{item.itemDetails.itemQuantity}</td>
+                                    <td>{item.quantity}</td>
                                     <td>{item.salesCount}</td>
                                     
                                     <td><Button variant="primary" id={item._id} onClick={() => {setItemId(item._id); setItemDesc(item.itemDetails.itemDesc); setItemName(item.itemDetails.itemName); setShowItemDesc(true)}}> View Item</Button></td>

@@ -20,6 +20,7 @@ const AddItemsDashboard = (props) => {
         description: props.itemDescription,
         date: todaysdate.toLocaleString()
     }
+    console.log(data);
     axios.post("/api/item/create", data)
     .then(res =>{
         if(res.data.valid){
@@ -54,7 +55,7 @@ const AddItemsDashboard = (props) => {
             </div><br/>
               <Button positive onClick= {() => addItem() /* dispatch(actions.addItem()) */}>Add Item</Button>
             <div><br/>
-                <h3>{props.itemsAdded === 'true' ? "Items added to the inventory" : props.itemsAdded === 'false' ? "Please try again" : props.itemsAdded}</h3>
+                <h3>{props.itemsAdded === 'true' ? "Items added to the inventory" : props.itemsAdded === 'false' ? "Please try again. (Possibly item already exists)" : props.itemsAdded}</h3>
             </div>
           </div>
         </Form>

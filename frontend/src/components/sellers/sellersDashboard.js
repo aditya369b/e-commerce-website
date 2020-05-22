@@ -5,11 +5,32 @@ import AddItemsDashboard from './addItemsDashboard'
 import ShowItemsDashboard from './showItemsDashboard'
 import { Button } from 'react-bootstrap'
 
+import Cookies from 'universal-cookie';
+
 import {
     LogOutUser,
+    setUsername,
+    setUserType,
+    setIsLoggedIn,
 } from "../../redux/actions/userActions";
 
+const cookies = new Cookies();
+
 const SellersDashboard = ({ username, userType, isLoggedIn, messages, dispatch}) => {
+
+    React.useEffect(() => {
+        let cookie_uname = cookies.get('username', { path: '/' });
+        let cookie_utype = cookies.get('userType', { path: '/' });
+        let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
+        console.log("cookie_uname " + cookie_uname)
+        console.log("cookie_loggedin " + cookie_isLoggedIn)
+        if (cookie_isLoggedIn != null && cookie_isLoggedIn === 'true') {
+            console.log("User-Logged-In")
+            dispatch(setUsername(cookie_uname))
+            dispatch(setUserType(cookie_utype))
+            dispatch(setIsLoggedIn(cookie_isLoggedIn))
+        }
+    }, [dispatch]);
     
     //True = sell page, False = list page
     const [addItem_page_state, set_addPage_state] = React.useState(false);  
