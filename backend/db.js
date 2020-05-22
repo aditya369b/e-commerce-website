@@ -2,8 +2,7 @@ const { MongoClient, ObjectID } = require("mongodb");
 const md5 = require('md5');
 
 // Connection URL
-const url = "mongodb://localhost:27017";
-
+const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
 // Database Name
 const dbName = "Mocha";
 
