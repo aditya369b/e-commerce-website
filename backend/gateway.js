@@ -8,7 +8,7 @@ const appServer = server.createServer(app);
 
 const apiProxy = httpProxy.createProxyServer();
 const wsProxy = httpProxy.createProxyServer({
-  target: process.env.NOTIFICATION_HOST || 'http://localhost:6000',
+  target: process.env.NOTIFICATION_HOST || 'http://localhost:3002',
   ws: true,
 });
 
@@ -16,7 +16,14 @@ const wsProxy = httpProxy.createProxyServer({
 apiProxy.on('error', (err, req, res) => {
   console.log(err)
   res.status(500).send('Proxy Error');
+}); 
+
+wsProxy.on('error', (err, req, socket) => {
+  console.log(err);
+  console.log('ws failed');
+  socket.end();
 });
+
 
 // api for auth service
 const authServer = process.env.AUTHENTICATION_END || 'http://localhost:3001';
