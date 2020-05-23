@@ -72,7 +72,8 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         .then(res => {
             // dispatch(setItems(res.data.result));
             if(res.data.result.length != allItems.length)
-                setAllItems(res.data.result);
+            {setAllItems([]);
+                setAllItems(res.data.result);}
             console.log(res.data);
         })
         .catch(console.log);

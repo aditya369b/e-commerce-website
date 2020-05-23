@@ -22,6 +22,7 @@ const Purchases = ({ username, isLoggedIn, isError, dispatch }) => {
     axios.post('/api/item/purchaseHistory',{"username" : username}) //This need to be connected to real url for getting the items
         .then(res => {
             setLoading(false);
+            setPurchases({});  
             setPurchases(res.data.result);  
             // console.log(res.data);
         })
