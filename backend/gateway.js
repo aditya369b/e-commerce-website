@@ -6,9 +6,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 const appServer = server.createServer(app);
 
-const apiProxy = httpProxy.createProxyServer();
+const apiProxy = httpProxy.createProxyServer(app);
 const wsProxy = httpProxy.createProxyServer({
-  target: process.env.NOTIFICATION_HOST || 'http://localhost:3002',
+  target:  process.env.NOTIFICATION_HOST || 'http://localhost:3002',
   ws: true,
 });
 
@@ -44,17 +44,17 @@ app.all("/api/item/*", (req, res) => {
 });
 
 
-appServer.on('upgrade', (req, socket, head) => {
-  console.log('upgrade ws here');
-  wsProxy.ws(req, socket, head);
-});
-
 // redirection for websockets
 const websocketHost = process.env.NOTIFICATION_HOST || 'http://localhost:3002/websocket';
 console.log(`WebSocket end proxies to: ${websocketHost}`);
 app.all('/websocket*', (req, res) => {
   console.log('incoming ws');
   apiProxy.web(req, res, { target: websocketHost });
+});
+
+appServer.on('upgrade', (req, socket, head) => {
+  console.log('upgrade ws here');
+  wsProxy.ws(req, socket, head);
 });
 
 // api for receipt service
@@ -66,4 +66,4 @@ app.all("*", (req, res) => {
 
 });
 
-app.listen(port, () => console.log(`Gateway on port ${port}!`))
+appServer.listen(port, () => console.log(`Gateway on port ${port}!`))

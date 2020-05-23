@@ -45,7 +45,7 @@ services:
     environment:
       - FRONT_END_HOST=http://frontend:3000
       - AUTHENTICATION_END=http://authserver:3001
-      - NOTIFICATION_HOST=http://notification:3002
+      - NOTIFICATION_HOST=http://notification:3002/websocket
       - TRANSACTION_END=http://transaction:3003
       - INVENTORY_END=http://inventory:3004
   frontend:

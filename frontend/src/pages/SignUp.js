@@ -31,6 +31,7 @@ const Signup = ({ username, userType, password, address, email_address, isNewUse
 
     dispatch(setIsError(false))
     cookies.remove('username');
+    cookies.remove('userType');
     cookies.remove('loggedin');
     console.log("Name: " + name + " type: " + userType);
     let body = {
@@ -48,6 +49,7 @@ const Signup = ({ username, userType, password, address, email_address, isNewUse
       .then((res) => {
         if (res.data.valid) {
           cookies.set('username', username, { path: '/' });
+          cookies.set('userType', userType, { path: '/' });
           cookies.set('loggedin', 'true', { path: '/' });
           console.log("User-Credentials Authenticated");
 
@@ -63,6 +65,10 @@ const Signup = ({ username, userType, password, address, email_address, isNewUse
       })
       .catch(console.log());
   };
+
+  if(userType == "")
+    dispatch(setUserType("buyer"));
+
   if (showHomePage) {
     if(userType == "seller")
         return <Redirect to="/seller/" />;

@@ -37,6 +37,7 @@ app.post('/api/transaction', (req,res) => {
 
     let username = req.body.username;
     let items = req.body.itemId;
+    let item_name = req.body.itemName;
     let price = req.body.price;
     let params = {};
   
@@ -51,6 +52,7 @@ app.post('/api/transaction', (req,res) => {
      db.collection("TransCollection")
         .insert({
           items: items,
+          itemName: item_name,
           buyer: username,
           price: price,
           purchaseDate: date.toLocaleString(),

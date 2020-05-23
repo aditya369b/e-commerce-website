@@ -199,9 +199,9 @@ client.connect((err) => {
         console.log(resultObj);
         let purchaseDate = resultObj.purchaseDate
           if (response.hasOwnProperty(purchaseDate))
-              response[purchaseDate].push(resultObj.items);
+              response[purchaseDate].push(resultObj.itemName);
           else
-          response[purchaseDate] = [resultObj.items];
+          response[purchaseDate] = [resultObj.itemName];
       }
       console.log(response);
 

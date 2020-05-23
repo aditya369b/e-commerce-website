@@ -55,7 +55,7 @@ client.connect((err) => {
         });
 
     defaultTransaction = [
-        {items: "test_seller_book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date().toLocaleString()},
+        {items: "test_seller_book", itemName: "book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date().toLocaleString()},
     ]
         
     db.collection("TransCollection")
