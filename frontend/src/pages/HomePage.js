@@ -6,6 +6,7 @@ import md5 from "md5";
 import axios from "axios";
 import {
     setUsername,
+    setUserType,
     setPassword,
     setIsError,
     setIsLoggedIn,
@@ -35,29 +36,57 @@ const customStyles = {
 const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws, dispatch }) => {
 
     Modal.setAppElement('#root');
+    const [isSeller, setisSeller] = React.useState(false);
     React.useEffect(() => {
         let cookie_uname = cookies.get('username', { path: '/' });
+        let cookie_utype = cookies.get('userType', { path: '/' });
         let cookie_isLoggedIn = cookies.get('loggedin', { path: '/' });
         console.log("cookie_uname " + cookie_uname)
         console.log("cookie_loggedin " + cookie_isLoggedIn)
         if (cookie_isLoggedIn != null && cookie_isLoggedIn === 'true') {
             console.log("User-Logged-In")
             dispatch(setUsername(cookie_uname))
+            dispatch(setUserType(cookie_utype))
             dispatch(setIsLoggedIn(cookie_isLoggedIn))
+            if(cookie_utype == "seller")
+                setisSeller(true);
         }
     }, [dispatch]);
 
 
     const [showPurchaseHistory, setShowPurchaseHistory] = React.useState(false);
+
+    const [allItems, setAllItems] = React.useState([]);
+    const [showItemDesc, setShowItemDesc] = React.useState(false);
+    const [itemId, setItemId] = React.useState('');
+    const [itemName, setItemName] = React.useState('');
+    const [itemDesc, setItemDesc] = React.useState('');
+
     const [createNewUser, setCreateNewUser] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [prevMessages, setPrevMessages] = React.useState([]);
+    
+    function getItems(){
 
     axios.get('/api/item/getAllItems')
         .then(res => {
-            dispatch(setItems(res.data.result));
-            // console.log(res.data);
+            // dispatch(setItems(res.data.result));
+            if(res.data.result.length != allItems.length)
+            {setAllItems([]);
+                setAllItems(res.data.result);}
+            console.log(res.data);
         })
         .catch(console.log);
+    }
+
+    getItems();
+
+    if(messages.length != prevMessages.length){
+        setPrevMessages(messages);
+        setAllItems([]);
+        getItems();
+    }
+    console.log(prevMessages);
 
     function openModal() {
         setShowPurchaseHistory(false);
@@ -77,6 +106,27 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         setIsOpen(false);
     }
 
+    const transaction = (itemId, price) => {
+        console.log(itemId);
+        if(isLoggedIn){
+        const body = {
+            username: username,
+            itemId: itemId,
+            price: price
+        };
+
+        const url = "/api/transaction";
+
+        axios.post(url, body)
+        .then(res => {
+            console.log(res.data);
+            })
+            .catch((e) => console.log(e));
+        }
+        else{
+            alert("Please login to make a purchase!");
+        }
+    }
 
     const LoginUser = () => {
 
@@ -95,9 +145,15 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                 if (res.data.valid) {
                     console.log(res.data);
                     cookies.set('username', username, { path: '/' });
+                    cookies.set('userType', res.data.userType, { path: '/' });
+                    // let cookie_utype = cookies.get('userType', { path: '/' });
                     cookies.set('loggedin', 'true', { path: '/' });
                     dispatch(setIsError(false));
                     dispatch(setIsLoggedIn(true));
+                    if(res.data.userType && res.data.userType == "seller")
+                        {   dispatch(setUserType("seller"));
+                            setisSeller(true);
+                        }
                     closeModal();
                 } else {
 
@@ -121,6 +177,12 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         else
             openModal();
         }
+    else if (showItemDesc){
+        return (<Redirect to={{ pathname : "/item-description/", state: { id: itemId, description: itemDesc, name: itemName } }}/>);
+    }
+    else if (isSeller){
+        return (<Redirect to="/seller/" />);
+    }
 
     else
         return (
@@ -187,18 +249,25 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                             <th>Item</th>
                             <th>Price ($)</th>
                             <th>Date Added</th>
-                            <th>Views</th>
+                            <th>Quantity left</th>
+                            <th>Total Sold</th>
+                            <th>Click to View</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item, i) => (
+                        {allItems.map((item, i) => (
+                            item.forSale &&
                             <tr variant="light" key={i} id={item._id}>
                                     <td>{item.itemDetails.itemName}</td>
                                     <td>{item.itemDetails.itemPrice}</td>
                                     <td>{item.itemDetails.itemDate}</td>
-                                    <td>{"     "}</td>
-                                    <td><Button variant="primary" id={item._id} onClick={() => dispatch(buyItem(item._id, items, ws))}> Buy Item Now</Button></td>
+                                    <td>{item.quantity}</td>
+                                    <td>{item.salesCount}</td>
+                                    
+                                    <td><Button variant="primary" id={item._id} onClick={() => {setItemId(item._id); setItemDesc(item.itemDetails.itemDesc); setItemName(item.itemDetails.itemName); setShowItemDesc(true)}}> View Item</Button></td>
+                                    <td><Button variant="primary" id={item._id} onClick={() => {transaction(item.itemId, item.itemDetails.itemPrice)}}> Buy Item Now</Button></td>
+                                    {/* <td><Button variant="primary" id={item._id} onClick={() => dispatch(buyItem(item._id, allItems, ws))}> Buy Item Now</Button></td> */}
                             </tr>))}
                     </tbody>
                 </Table>

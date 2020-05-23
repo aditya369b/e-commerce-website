@@ -2,8 +2,7 @@ const { MongoClient, ObjectID } = require("mongodb");
 const md5 = require('md5');
 
 // Connection URL
-const url = "mongodb://localhost:27017";
-
+const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
 // Database Name
 const dbName = "Mocha";
 
@@ -40,12 +39,12 @@ client.connect((err) => {
 
 
         /** Creates items in db */
-    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date(), itemURL: ""};
-    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date(), itemURL: ""};
+    let itemDetails1 = {itemName: "reader", itemPrice: 19.99, itemDesc: "A reader", itemDate: new Date().toLocaleString()};
+    let itemDetails2 = {itemName: "book", itemPrice: 9.99, itemDesc: "A book", itemDate: new Date().toLocaleString()};
 
     defaultItems = [
-        {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", salesCount: 0, forSale : true},
-        {itemId: "test_seller_book", itemDetails: itemDetails2, seller: "test_seller", salesCount: 1, forSale : true},
+        {itemId: "test_seller_reader", itemDetails: itemDetails1, seller: "test_seller", quantity : 10, salesCount: 0, forSale : true},
+        {itemId: "test_seller_book", itemDetails: itemDetails2, seller: "test_seller", quantity : 5, salesCount: 1, forSale : true},
     ]
         
     db.collection("ItemCollection")
@@ -56,7 +55,7 @@ client.connect((err) => {
         });
 
     defaultTransaction = [
-        {items: "test_seller_book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date()},
+        {items: "test_seller_book", buyer: "test_buyer", price: 9.99, purchaseDate: new Date().toLocaleString()},
     ]
         
     db.collection("TransCollection")

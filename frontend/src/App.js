@@ -2,6 +2,8 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import Purchases from './pages/Purchases';
+import ItemDesc from './pages/ItemDesc';
+import Seller from './components/sellers/sellersDashboard';
 
 import {
   setUsername,
@@ -29,11 +31,17 @@ const App = ({ ws, dispatch }) => {
     <div className="App">
       <div>
         <Switch>
+        <Route path="/seller" >
+            <Seller />
+          </Route>
           <Route path="/signup" >
             <Signup ws={ws} />
           </Route>
           <Route path="/purchase-history" >
             <Purchases ws={ws} />
+          </Route>
+          
+          <Route path="/item-description/" render={(props) => <ItemDesc ws = {ws} {...props}/>}>
           </Route>
           <Route path="/">
             <HomePage ws={ws} />

@@ -14,7 +14,9 @@ import { setItemViewCount } from './redux/actions/itemsActions';
 import { insertMessage } from './redux/actions/homePageActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const ws = new WebSocket('ws://localhost:3002')
+const ws = new WebSocket('ws://' + window.location.host.split(':')[0] + (window.location.port && `:${window.location.port}`) + '/websocket');
+console.log('ws://' + window.location.host.split(':')[0] + (window.location.port && `:${window.location.port}`) + '/websocket');
+// const ws = new WebSocket('ws://localhost:5000/websocket');
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ws.onclose = () => {

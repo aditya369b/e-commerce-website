@@ -1,9 +1,10 @@
 const WebSocket = require('ws');
 const options = {port: 3002,};
 const redis = require('redis');
-const client = redis.createClient();
-const client_transaction = redis.createClient();
-//apis
+const client = redis.createClient({ host: process.env.REDIS_HOST || 'localhost' });
+
+
+const client_transaction = redis.createClient({ host: process.env.REDIS_HOST || 'localhost' });
 
 const wss = new WebSocket.Server(options);
 
@@ -15,9 +16,10 @@ client_transaction.on('message', (channel, message) => {
 });
 
 const broadcastMessage = (message) => {
-        wss.clients.forEach((client) => {
+    console.log(JSON.parse(message));    
+    wss.clients.forEach((client) => {
             if(client.readyState === WebSocket.OPEN){
-                client.send(JSON.stringify(message));
+                client.send((message));
             }
         });
     };
@@ -34,11 +36,12 @@ wss.on('connection' , (ws) => {
     
     ws.on('message', (message) => {
         const msgObj = JSON.parse(message);
+        console.log(msgObj);
         ws.id = msgObj.id;
         // client.incr(msgObj.id);
         let itemCount;
 
-        client.incr(msgObj.id, (err, cachedValue) => {
+        client.incr(ws.id, (err, cachedValue) => {
 
             if(err) {
               console.log(err);

@@ -3,6 +3,7 @@
 // Step 1 initialize state
 const INITIAL_STATE = {
   username: "",
+  userType: "buyer",
   password: "",
   isLoggedIn: false,
   isNewUser: true,
@@ -31,6 +32,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         // email: state.email,
         // isLoggedIn: state.isLoggedIn,
         username: action.username,
+      };
+    case "SET_USER_TYPE":
+      return {
+        ...state,
+        userType: action.userType,
       };
     case "SET_PASSWORD":
       return {
