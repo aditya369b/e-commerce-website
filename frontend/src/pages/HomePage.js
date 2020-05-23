@@ -72,13 +72,13 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         .then(res => {
             // dispatch(setItems(res.data.result));
             if(res.data.result.length != allItems.length)
-            {setAllItems([]);
+            {
                 setAllItems(res.data.result);}
             console.log(res.data);
         })
         .catch(console.log);
     }
-
+    
     getItems();
 
     if(messages.length != prevMessages.length){
@@ -106,12 +106,13 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
         setIsOpen(false);
     }
 
-    const transaction = (itemId, price) => {
+    const transaction = (itemId, itemName, price) => {
         console.log(itemId);
         if(isLoggedIn){
         const body = {
             username: username,
             itemId: itemId,
+            itemName : itemName,
             price: price
         };
 
@@ -266,7 +267,7 @@ const HomePage = ({ username, password, isLoggedIn, isError, items, messages, ws
                                     <td>{item.salesCount}</td>
                                     
                                     <td><Button variant="primary" id={item._id} onClick={() => {setItemId(item._id); setItemDesc(item.itemDetails.itemDesc); setItemName(item.itemDetails.itemName); setShowItemDesc(true)}}> View Item</Button></td>
-                                    <td><Button variant="primary" id={item._id} onClick={() => {transaction(item.itemId, item.itemDetails.itemPrice)}}> Buy Item Now</Button></td>
+                                    <td><Button variant="primary" id={item._id} onClick={() => {transaction(item.itemId, item.itemDetails.itemName, item.itemDetails.itemPrice)}}> Buy Item Now</Button></td>
                                     {/* <td><Button variant="primary" id={item._id} onClick={() => dispatch(buyItem(item._id, allItems, ws))}> Buy Item Now</Button></td> */}
                             </tr>))}
                     </tbody>

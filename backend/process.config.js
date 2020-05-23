@@ -49,12 +49,12 @@ module.exports = {
     //     ignore_watch : ["node_modules"],
     //     watch: true,
     //   },
-    //   {
-    //     name: "fileserver",
-    //     script: "./fileServer.js",
-    //     watch: true,
-    //     ignore_watch : ["node_modules"],
-    //     watch: true,
-    //   },
+      // {
+      //   name: "frontend",
+      //   script: "./frontend.js",
+      //   watch: true,
+      //   ignore_watch : ["node_modules"],
+      //   watch: true,
+      // },
     ]
   }

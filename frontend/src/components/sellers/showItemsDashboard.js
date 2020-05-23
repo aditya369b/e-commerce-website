@@ -80,7 +80,7 @@ const updateItem = (item_id, item_name) => {
                                         <p>Item Name: {items.itemDetails.itemName}</p> 
                                         {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Item Price"  onChange= {e => dispatch(actions.setItemPrice(e.target.value))}/> </div> : <p>Price: {items.itemDetails.itemPrice}</p>}
                                         {props.updateItems===items.itemId ? <div> <br/> <Input type= 'text' label="Items Description" onChange= {e => dispatch(actions.setItemDescription(e.target.value))} /> </div> : <p>Description: {items.itemDetails.itemDesc}</p>}
-                                        {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Items Quantity" onChange= {e => dispatch(actions.setItemQuantity(e.target.value))}/> </div> :<p>Quantity: {items.itemDetails.itemQuantity}</p>}
+                                        {props.updateItems===items.itemId ? <div> <br/> <Input type= 'number' label="Items Quantity" onChange= {e => dispatch(actions.setItemQuantity(e.target.value))}/> </div> :<p>Quantity: {items.quantity}</p>}
                                     
                                         { props.editItems && <div> <Button onClick = {() => {dispatch(actions.setUpdateItems(items.itemId))}}> Edit </Button><br/><br/> </div>} 
                                 

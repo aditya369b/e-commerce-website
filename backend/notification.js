@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const options = {port: 3002,};
+const options = {port: 3002};
 const redis = require('redis');
 const client = redis.createClient({ host: process.env.REDIS_HOST || 'localhost' });
 
@@ -8,29 +8,7 @@ const client_transaction = redis.createClient({ host: process.env.REDIS_HOST || 
 
 const wss = new WebSocket.Server(options);
 
-client_transaction.subscribe('transactionChannel');
 
-client_transaction.on('message', (channel, message) => {
-    console.log("Message: ",message);
-    broadcastMessage(message);
-});
-
-const broadcastMessage = (message) => {
-    console.log(JSON.parse(message));    
-    wss.clients.forEach((client) => {
-            if(client.readyState === WebSocket.OPEN){
-                client.send((message));
-            }
-        });
-    };
-
-const updateItemViewerCount = (itemId, itemCount) => {
-    broadcastMessage(JSON.stringify({
-        type: 'UPDATE_VIEW_COUNT',
-        id: itemId,
-        count: itemCount,
-    }))
-}
 
 wss.on('connection' , (ws) => {
     
@@ -67,6 +45,7 @@ wss.on('connection' , (ws) => {
     });
 
     ws.on('close', (e) => {
+        if(ws.id){
         client.decr(ws.id, (err, cachedValue) => {
 
             if(err) {
@@ -75,9 +54,37 @@ wss.on('connection' , (ws) => {
             console.log(cachedValue);
         updateItemViewerCount(ws.id, cachedValue);
         });
-
+    }
     });
 
     ws.on('error', (e) => {});
 
 });
+
+client_transaction.on('message', (channel, message) => {
+    console.log("Message: ",message);
+    // broadcastMessage(message);
+    console.log(JSON.parse(message));    
+    wss.clients.forEach((client) => {
+                client.send(message);
+            
+        });
+
+});
+
+client_transaction.subscribe('transactionChannel');
+const broadcastMessage = (message) => {
+    console.log(JSON.parse(message));    
+    wss.clients.forEach((client) => {
+                client.send((message));
+            
+        });
+    };
+
+const updateItemViewerCount = (itemId, itemCount) => {
+    broadcastMessage(JSON.stringify({
+        type: 'UPDATE_VIEW_COUNT',
+        id: itemId,
+        count: itemCount,
+    }))
+}
