@@ -17,7 +17,7 @@ const ItemDesc = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [views, setViews] = React.useState(0);
     const [showHomePage, setToHomePage] = React.useState(false);
-    const [ws2, setWs2] = React.useState(new WebSocket('ws://localhost:3002'));
+    const [ws2, setWs2] = React.useState(new WebSocket('ws://' + window.location.host.split(':')[0] + (window.location.port && `:${window.location.port}`) + '/websocket'));
 
     ws2.onclose = () => {
         console.log("Connection closed");
