@@ -12,7 +12,7 @@ const url = process.env.MONGO_HOST || 'mongodb://localhost:27017';
 
 const dbName = "Mocha";
 const client = new MongoClient(url);
-const client_transaction = redis.createClient();
+const client_transaction = redis.createClient({ host: process.env.REDIS_HOST || 'localhost' });
 
 app.use(express.json()); // this is a middleware
 
@@ -113,7 +113,7 @@ app.post('/api/transaction', (req,res) => {
     client_transaction.publish('transactionChannel', JSON.stringify(messageObj));
 
     console.log('Pushing new item to queue');
-    // producer.send(params);
+    producer.send(params);
     res.send(result);
   })
   .catch((e) => {
