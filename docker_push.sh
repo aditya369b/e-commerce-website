@@ -1,11 +1,11 @@
 #Following commands will build all the docker images
-# sudo docker build . -f devops/auth.Dockerfile -t arunhiremath92:mocha-authserver
-# sudo docker build . -f devops/database.Dockerfile -t arunhiremath92:mocha-database
-# sudo docker build . -f devops/frontend.Dockerfile -t arunhiremath92:mocha-frontend
-# sudo docker build . -f devops/gateway.Dockerfile -t arunhiremath92:mocha-backend
-# sudo docker build . -f devops/notification.Dockerfile -t arunhiremath92:mocha-notification
-# sudo docker build . -f devops/inventory.Dockerfile -t arunhiremath92:mocha-inventory
-# sudo docker build . -f devops/transaction.Dockerfile -t arunhiremath92:mocha-transaction
+sudo docker build . -f devops/auth.Dockerfile -t arunhiremath92:mocha-authserver
+sudo docker build . -f devops/database.Dockerfile -t arunhiremath92:mocha-database
+sudo docker build . -f devops/frontend.Dockerfile -t arunhiremath92:mocha-frontend
+sudo docker build . -f devops/gateway.Dockerfile -t arunhiremath92:mocha-backend
+sudo docker build . -f devops/notification.Dockerfile -t arunhiremath92:mocha-notification
+sudo docker build . -f devops/inventory.Dockerfile -t arunhiremath92:mocha-inventory
+sudo docker build . -f devops/transaction.Dockerfile -t arunhiremath92:mocha-transaction
 
 #Get the docker image id using 
 # sudo docker images
